@@ -69,6 +69,10 @@ export async function GET(request: NextRequest) {
         },
       },
 
+      {
+        $sort: { createdAt: -1 }
+      },
+
       // Remove unused fields
       {
         $project: {

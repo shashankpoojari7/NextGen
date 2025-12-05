@@ -1,12 +1,9 @@
-"use client"
-
 import React from 'react'
+import MessageBar from './MessageBar'
 
 function page() {
   return (
-    <div className='flex w-full min-h-screen justify-center items-center'>
-      Messages
-    </div>
+    <MessageBar/>
   )
 }
 

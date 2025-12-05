@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { ApiResponse } from "@/lib/ApiResponse";
 import dbConnect from "@/database/dbConnection";
 import Follow from "@/models/follow.model";
-import User from "@/models/user.model";
 import { safeObjectId } from "@/helpers/ValidateMongooseId";
 
 export async function GET(request: NextRequest) {
@@ -19,7 +18,6 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // ✅ Fetch pending follow requests with follower details
     const followRequests = await Follow.aggregate([
       {
         $match: {

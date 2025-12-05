@@ -74,6 +74,7 @@ function SearchPage() {
       <div className="flex border border-gray-700 rounded-lg px-4 py-2 mb-4 bg-black mx-3 items-center">
         <input
           type="text"
+          autoFocus
           value={inputValue}
           placeholder="Search..."
           className="w-full bg-transparent text-gray-200 text-sm focus:outline-none"

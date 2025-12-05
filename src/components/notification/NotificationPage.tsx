@@ -1,0 +1,279 @@
+"use client";
+
+import { FollowData } from "@/types/userFollowResponse";
+import { ChevronLeft, ChevronRight, Loader, X } from "lucide-react";
+import Link from "next/link";
+import { getTimeAgo } from "@/helpers/getTimeAgo";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { axiosInstance } from "@/services/axios";
+import { toast } from "sonner";
+import { useNotifications } from "@/hooks/useNotifications";
+import { NotificationItem } from "@/types/notificationResponse";
+import { useEffect } from "react";
+import { useNotificationStore } from "@/store/useNotificationStore";
+import { useRouter } from "next/navigation";
+
+export default function NotificationPage() {
+  const { data, isLoading, error } = useNotifications();
+  const queryClient = useQueryClient();
+  const resetNotification = useNotificationStore((s) => s.resetNotification)
+  const router = useRouter()
+
+  useEffect(() => {
+    async function markRead() {
+      try {
+        await axiosInstance.patch("/api/notifications/mark-all-read");
+        resetNotification()
+        queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      } catch (err) {
+        console.error("Failed to mark notifications as read", err);
+      }
+    }
+    markRead();
+  }, []);
+
+  const mutation = useMutation({
+    mutationFn: async ({ action, id }: { action: "accept" | "delete"; id: string }) => {
+      if (action === "accept") {
+        return axiosInstance.post(`/api/user/accept-request/${id}`);
+      } else if (action === "delete") {
+        return axiosInstance.delete(`/api/user/delete-request?requestId=${id}`);
+      }
+    },
+
+    onMutate: async ({ id }) => {
+      await queryClient.cancelQueries({ queryKey: ["follow-requests"] });
+
+      const previousData = queryClient.getQueryData<FollowData[]>(["follow-requests"]);
+
+      if (previousData) {
+        queryClient.setQueryData<FollowData[]>(
+          ["follow-requests"],
+          previousData.filter((req) => req._id !== id)
+        );
+      }
+      return { previousData };
+    },
+
+    onError: (_err, _vars, context) => {
+      if (context?.previousData) {
+        queryClient.setQueryData(["follow-requests"], context.previousData);
+      }
+      toast.error("Something went wrong. Please try again.");
+    },
+
+    onSuccess: (_data, variables) => {
+      if (variables.action === "accept") {
+        toast.success("You accepted the follow request!");
+      } else if (variables.action === "delete") {
+        toast.info("Follow request deleted.");
+      }
+    },
+
+    onSettled: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["follow-requests"] });
+      await queryClient.invalidateQueries({ queryKey: ["notifications"] });
+    },
+  });
+
+  if (isLoading)
+    return (
+      <div className="flex items-center justify-center py-6">
+        <Loader className="w-7 h-7 animate-spin text-gray-400" />
+      </div>
+    );
+
+  if (error)
+    return <p className="text-red-500 text-center py-4">Failed to load notifications</p>;
+
+  const notifications = data || [];
+
+  const thisWeek = notifications.filter((n) => isWithinDays(n.createdAt, 7));
+  const thisMonth = notifications.filter((n) => !isWithinDays(n.createdAt, 7));
+
+    return (
+    <div className="w-full max-w-2xl mx-auto bg-black text-white min-h-screen pb-20">
+      <div className="flex items-center justify-between text-[20px] font-bold px-4 py-4">
+        <p className="p-0.5">Notifications</p>
+        <X
+          onClick={() => {
+            router.back()
+          }}
+        />
+      </div>
+
+      <FollowRequestBanner notifications={notifications} />
+
+      {thisWeek.length > 0 && (
+        <div className="border-b border-gray-800">
+          <SectionHeader title="This week" />
+          {thisWeek.map((n) => (
+            <NotificationRow key={n._id} item={n} mutation={mutation} />
+          ))}
+        </div>
+      )}
+
+      {thisMonth.length > 0 && (
+        <div className="border-b border-gray-800">
+          <SectionHeader title="This month" />
+          {thisMonth.map((n) => (
+            <NotificationRow key={n._id} item={n} mutation={mutation} />
+          ))}
+        </div>
+      )}
+
+      {notifications.length === 0 && (
+        <div className="flex justify-center py-10">
+          <p className="text-gray-500">No notifications yet</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function FollowRequestBanner({ notifications }: { notifications: NotificationItem[] }) {
+  const requests = notifications.filter((n) => n.type === "FOLLOW_REQUEST");
+  if (requests.length === 0) return null;
+
+  return (
+    <Link href={"/notification/follow-requests"}>
+      <div className="flex items-center justify-between px-4 py-4 border-b border-gray-800 hover:bg-gray-900/30 transition cursor-pointer">
+        <div className="flex items-center gap-3">
+          <div className="h-11 w-11 rounded-full overflow-hidden bg-gray-800">
+            <img
+              src={requests[0].senderImage || "/no-profile.jpg"}
+              alt="request"
+              className="w-full h-full object-cover"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <span className="font-semibold">Follow requests</span>
+            <span className="text-sm text-gray-400">
+              {requests[0].senderUsername} + {requests.length - 1} others
+            </span>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+          <ChevronRight />
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+function SectionHeader({ title }: { title: string }) {
+  return (
+    <div className="px-4 py-3">
+      <h3 className="text-base font-bold text-white">{title}</h3>
+    </div>
+  );
+}
+
+function isWithinDays(date: string, days: number) {
+  const diff = (Date.now() - new Date(date).getTime()) / (1000 * 60 * 60 * 24);
+  return diff <= days;
+}
+
+function NotificationRow({ item, mutation }: { item: NotificationItem; mutation: any;}) 
+{
+  return (
+    <div className="flex items-center justify-between px-4 py-3 hover:bg-gray-900/30 transition">
+      <div className="flex items-center gap-3 flex-1 min-w-0">
+        <Link href={`/profile/${item.senderUsername}`}>
+          <div className="h-11 w-11 rounded-full overflow-hidden bg-gray-800 shrink-0">
+            <img
+              src={item.senderImage || "/no-profile.jpg"}
+              alt="profile"
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </Link>
+
+        <div className="flex flex-col min-w-0">
+          <NotificationText item={item} />
+          <span className="text-xs text-gray-500">{getTimeAgo(item.createdAt)}</span>
+        </div>
+      </div>
+
+      <RightAction item={item} mutation={mutation} />
+    </div>
+  );
+}
+
+function NotificationText({ item }: { item: NotificationItem }) {
+  const username = (
+    <Link href={`/profile/${item.senderUsername}`}>
+      <span className="font-semibold">{item.senderUsername}</span>
+    </Link>
+  );
+
+  if (item.type === "LIKE")
+    return (
+      <span className="text-sm text-gray-200">
+        {username} <span className="text-gray-300">liked your post.</span>
+      </span>
+    );
+
+  if (item.type === "COMMENT")
+    return (
+      <span className="text-sm text-gray-200">
+        {username} <span className="text-gray-300">commented on your post.</span>
+      </span>
+    );
+
+  if (item.type === "FOLLOW")
+    return (
+      <span className="text-sm text-gray-200">
+        {username} <span className="text-gray-300">started following you.</span>
+      </span>
+    );
+
+  if (item.type === "FOLLOW_REQUEST")
+    return (
+      <span className="text-sm text-gray-200">
+        {username} <span className="text-gray-300">requested to follow you.</span>
+      </span>
+    );
+
+  return null;
+}
+
+function RightAction({ item, mutation }: { item: NotificationItem; mutation: any }) {
+  if (item.type === "LIKE" || item.type === "COMMENT") {
+    return (
+      item.postPreview && (
+        <div className="h-11 w-11 rounded overflow-hidden bg-gray-800 ml-3">
+          <img src={item.postPreview} className="w-full h-full object-cover" />
+        </div>
+      )
+    );
+  }
+
+  if (item.type === "FOLLOW") {
+    return null;
+  }
+
+  if (item.type === "FOLLOW_REQUEST") {
+    return (
+      <div className="flex gap-2 ml-3">
+        <button
+          onClick={() => mutation.mutate({ action: "accept", id: item.followRequestId })}
+          className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md"
+        >
+          Confirm
+        </button>
+
+        <button
+          onClick={() => mutation.mutate({ action: "delete", id: item.followRequestId })}
+          className="px-4 py-1.5 bg-[#2b2b2b] hover:bg-[#3b3b3b] text-white text-sm font-medium rounded-md"
+        >
+          Delete
+        </button>
+      </div>
+    );
+  }
+
+  return null;
+}

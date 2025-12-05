@@ -1,8 +1,6 @@
-import React from 'react'
-import NotificationPage from './NotificationPage'
+import NotificationPage from '@/components/notification/NotificationPage'
 
-function page() {
+export default function page() {
   return <NotificationPage/>
 }
 
-export default page

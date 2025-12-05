@@ -21,6 +21,15 @@
   text-shadow: 0 1px 5px rgb(126, 223, 197, 0.7)
 }
 
+.curly-heading-mobile {
+  font-family: 'Pacifico', cursive;
+  font-weight: 600;
+  font-size: 24px;
+  letter-spacing: 4px; 
+  text-transform: capitalize;
+  text-shadow: 0 1px 5px rgb(126, 223, 197, 0.7)
+}
+
 /* Post Skeleton */
 @keyframes shimmer {
   0% {
@@ -67,6 +76,31 @@
     #1a1a1a 100%
   );
   background-size: 200% 100%;
+}
+
+.typing-dot {
+  width: 6px;
+  height: 6px;
+  background: #ccc;
+  border-radius: 50%;
+  display: inline-block;
+  animation: blink 1.4s infinite both;
+}
+
+.typing-dot.dot1 {
+  animation-delay: 0s;
+}
+.typing-dot.dot2 {
+  animation-delay: 0.2s;
+}
+.typing-dot.dot3 {
+  animation-delay: 0.4s;
+}
+
+@keyframes blink {
+  0% { opacity: 0.2; transform: translateY(0); }
+  20% { opacity: 1; transform: translateY(-2px); }
+  100% { opacity: 0.2; transform: translateY(0); }
 }
 
 

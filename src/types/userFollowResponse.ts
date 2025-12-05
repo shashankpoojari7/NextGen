@@ -12,5 +12,5 @@ export interface FollowData {
   isAccepted: boolean;
   createdAt: string;
   updatedAt: string;
-  follower: FollowerUser; // nested follower user details
+  follower: FollowerUser; 
 }

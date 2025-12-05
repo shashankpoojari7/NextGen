@@ -4,9 +4,8 @@ import mongoose from "mongoose";
 import dbConnect from "@/database/dbConnection";
 import User from "@/models/user.model";
 import { safeObjectId } from "@/helpers/ValidateMongooseId";
-import { profile } from "console";
 
-export async function GET(request: NextRequest, { params }: { params: { username: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ username: string }> }) {
   try {
     await dbConnect();
 

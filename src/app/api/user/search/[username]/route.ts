@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ApiResponse } from "@/lib/ApiResponse";
 import User from "@/models/user.model";
 
-export async function GET(request: NextRequest, { params }: { params: { username: string } }) 
+export async function GET(request: NextRequest, { params }: { params: Promise<{ username: string }>  }) 
 {
   try {
     await dbConnect();

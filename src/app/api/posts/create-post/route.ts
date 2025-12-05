@@ -1,22 +1,24 @@
 import dbConnect from "@/database/dbConnection";
-import User from "@/models/user.model"
+import User from "@/models/user.model";
 import Post from "@/models/post.model";
 import { ApiResponse } from "@/lib/ApiResponse";
 import { NextResponse } from "next/server";
 import cloudinary from "@/lib/Cloudinary";
 import { safeObjectId } from "@/helpers/ValidateMongooseId";
+import { v4 as uuid } from "uuid";
+import { Readable } from "stream";
 
 export async function POST(request: Request) {
   await dbConnect();
 
   try {
     const formData = await request.formData();
-    const caption = formData.get("caption")?.toString();
-    const file = formData.get("image") as File;
-    const location = formData.get("location")?.toString() || ""
-    const userId = request.headers.get("x-user-id")
+    const caption = formData.get("caption")?.toString() || "";
+    const file = formData.get("image") as File | null;
+    const location = formData.get("location")?.toString() || "";
+    const userId = request.headers.get("x-user-id");
 
-    const validUserId = safeObjectId(userId as string)
+    const validUserId = safeObjectId(userId as string);
 
     if (!validUserId || !file) {
       return NextResponse.json(
@@ -33,31 +35,47 @@ export async function POST(request: Request) {
       );
     }
 
-    const buffer = Buffer.from(await file.arrayBuffer());
+    // ⭐ Convert Web ReadableStream → Node Readable Stream
+    const webStream = file.stream();
+    const nodeStream = Readable.fromWeb(webStream as any);
 
-    const result = await new Promise<any>((resolve, reject) => {
-      const stream = cloudinary.uploader.upload_stream(
-        { folder: "nextgen_uploads" },
+    const postPublicId = `post_${uuid()}`;
+
+    // ⭐ Upload to Cloudinary using upload_stream
+    const cloudResult: any = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          folder: "nextgen/posts",
+          public_id: postPublicId,
+          overwrite: false,
+          transformation: [
+            { width: 1080, height: 1080, crop: "fill", gravity: "auto" },
+          ],
+        },
         (error, result) => {
           if (error) return reject(error);
           resolve(result);
         }
       );
-      stream.end(buffer);
+
+      // 🚀 PIPE NODE STREAM TO CLOUDINARY STREAM
+      nodeStream.pipe(uploadStream);
     });
 
+    // ⭐ Create post in database
     const newPost = await Post.create({
       userId,
       caption,
-      imageUrl: result.secure_url,
-      location
+      imageUrl: cloudResult.secure_url,
+      publicId: `nextgen/posts/${postPublicId}`,
+      location,
     });
 
     return NextResponse.json(
       new ApiResponse(200, "Post created successfully", newPost)
     );
   } catch (error: any) {
-    console.error(error);
+    console.error("Upload Error:", error);
     return NextResponse.json(
       new ApiResponse(500, "Something went wrong while creating the post"),
       { status: 500 }

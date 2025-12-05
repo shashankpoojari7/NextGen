@@ -1,6 +1,6 @@
 import { axiosInstance } from "./axios";
 import { ApiResponse } from "@/lib/ApiResponse";
-import { IncomingPostData } from "@/app/(app)/home/HomePage";
+import { IncomingPostData } from "@/types/postResponseType";
 
 export const getPublicPosts = async (): Promise<IncomingPostData[]> => {
   const res = await axiosInstance.get<ApiResponse<IncomingPostData[]>>("/api/posts/public");

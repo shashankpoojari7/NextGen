@@ -10,7 +10,7 @@ import Share from "@/models/share.model";
 import mongoose from "mongoose";
 
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
 
   let session;
   try {

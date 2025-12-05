@@ -1,24 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ApiResponse } from "@/lib/ApiResponse";
 import dbConnect from "@/database/dbConnection";
-import mongoose from "mongoose";
 import Follow from "@/models/follow.model";
 import { safeObjectId } from "@/helpers/ValidateMongooseId";
-
+import Notification from "@/models/notification.model";
 
 export async function POST(request: NextRequest) {
   try {
     await dbConnect();
 
-    const searchParams = request.nextUrl.searchParams
-    const followingUserId = searchParams.get("followingId")
-    const isPrivateParam = searchParams.get("isPrivate")
-    const userId = request.headers.get("x-user-id")
+    const searchParams = request.nextUrl.searchParams;
+    const followingUserId = searchParams.get("followingId");
+    const isPrivateParam = searchParams.get("isPrivate") === "true"; 
+    const userId = request.headers.get("x-user-id");
 
-    const validUserId = safeObjectId(userId as string)
-    const validFollowingUserId = safeObjectId(followingUserId as string)
-
-    if (!validUserId || !validFollowingUserId) {
+    if (!userId || !followingUserId) {
       return NextResponse.json(
         new ApiResponse(400, "Invalid followingId or userId"),
         { status: 400 }
@@ -35,7 +31,7 @@ export async function POST(request: NextRequest) {
     const existingRequest = await Follow.findOne({
       followerId: userId,
       followingId: followingUserId,
-      isAccepted: false
+      isAccepted: false,
     });
 
     if (existingRequest) {
@@ -48,34 +44,44 @@ export async function POST(request: NextRequest) {
     const alreadyFollowing = await Follow.findOne({
       followerId: userId,
       followingId: followingUserId,
-      isAccepted: true
+      isAccepted: true,
     });
-    
-    if(alreadyFollowing) {
+
+    if (alreadyFollowing) {
       return NextResponse.json(
-        new ApiResponse(409, "User is Already a follower."),
+        new ApiResponse(409, "User is already a follower."),
         { status: 409 }
       );
     }
 
-    const newRequest = await Follow.create({
+    const followRequest = await Follow.create({
       followerId: userId,
       followingId: followingUserId,
-      isAccepted: isPrivateParam
+      isAccepted: !isPrivateParam,
     });
 
-    if(isPrivateParam) {
+    if (isPrivateParam) {
+      await Notification.create({
+        recipient: followingUserId,
+        actor: userId,
+        type: "FOLLOW_REQUEST",
+        entityId: followRequest._id
+      })
       return NextResponse.json(
         new ApiResponse(201, "Follow request sent successfully."),
         { status: 201 }
       );
     } else {
+      await Notification.create({
+        recipient: followingUserId,
+        actor: userId,
+        type: "FOLLOW"
+      })
       return NextResponse.json(
-        new ApiResponse(201, "Followed Successfully."),
+        new ApiResponse(201, "Followed successfully."),
         { status: 201 }
       );
     }
-
   } catch (error: any) {
     console.error(error);
     return NextResponse.json(

@@ -4,7 +4,7 @@ import User from "@/models/user.model";
 import { usernameSchema } from "@/schemas/signUpSchemas";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest, { params }: { params: { username: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ username: string }> }) {
   await dbConnect();
   try {
     const { username } = await params

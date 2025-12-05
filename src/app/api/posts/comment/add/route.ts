@@ -5,7 +5,7 @@ import { safeObjectId } from "@/helpers/ValidateMongooseId";
 import Post from "@/models/post.model";
 import Comment from "@/models/comment.model";
 import mongoose from "mongoose";
-
+import Notification from "@/models/notification.model";
 
 export async function POST(request: NextRequest) {
   
@@ -60,6 +60,15 @@ export async function POST(request: NextRequest) {
     );
 
     await session.commitTransaction();
+
+    if (String(post.userId) !== String(validUserId)) {
+      await Notification.create({
+        recipient: post.userId,
+        actor: validUserId,
+        type: "COMMENT",
+        entityId: validPostId,
+      });
+    }
 
     return NextResponse.json(
       new ApiResponse(200, "Comment added successfully", userComment),

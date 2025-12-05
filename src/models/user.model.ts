@@ -101,6 +101,8 @@ userSchema.pre("save", async function (next) {
 
 userSchema.methods.isPasswordCorrect = async function (password: string) {
   const pepperedPassword = password + PEPPER;
+  console.log(pepperedPassword);
+  
   return await argon2.verify(this.password, pepperedPassword);
 };
 

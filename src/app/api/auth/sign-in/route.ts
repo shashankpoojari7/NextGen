@@ -2,7 +2,7 @@ import dbConnect from "@/database/dbConnection";
 import User from "@/models/user.model";
 import { ApiResponse } from "@/lib/ApiResponse";
 import { NextResponse } from "next/server";
-import { GenerateAccessToken } from "@/lib/jwt";
+// import { GenerateAccessToken } from "@/lib/jwt";
 
 export async function POST(request: Request) {
   await dbConnect();
@@ -74,23 +74,23 @@ export async function POST(request: Request) {
       updatedAt: user.updatedAt,
     };
 
-    const token = GenerateAccessToken({
-      _id: user._id.toString(),
-      username: user.username,
-    });
+    // const token = GenerateAccessToken({
+    //   _id: user._id.toString(),
+    //   username: user.username,
+    // });
 
     const response = NextResponse.json(
       new ApiResponse(200, "Login successful", userData),
       { status: 200 }
     );
 
-    response.cookies.set("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      path: "/",
-      sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 10,
-    });
+    // response.cookies.set("token", token, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === "production",
+    //   path: "/",
+    //   sameSite: "lax",
+    //   maxAge: 60 * 60 * 24 * 10,
+    // });
 
     return response;
   } catch (error: any) {

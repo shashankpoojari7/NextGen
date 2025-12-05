@@ -5,8 +5,9 @@ import { safeObjectId } from "@/helpers/ValidateMongooseId";
 import mongoose from "mongoose";
 import Post from "@/models/post.model";
 import Like from "@/models/like.model";
+import Notification from "@/models/notification.model";
 
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   let session;
   try {
     await dbConnect();
@@ -58,6 +59,27 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     }
 
     await session.commitTransaction();
+
+    const isSelf = String(post.userId) === String(validUserId);
+
+    if (!isSelf) {
+      if (alreadyLiked) {
+        await Notification.deleteOne({
+          recipient: post.userId,
+          actor: validUserId,
+          type: "LIKE",
+          entityId: validPostId
+        });
+      } else {
+        await Notification.create({
+          recipient: post.userId,
+          actor: validUserId,
+          type: "LIKE",
+          entityId: validPostId,
+        });
+      }
+    }
+
     return NextResponse.json(new ApiResponse(200, message), { status: 200 });
 
   } catch (error: any) {

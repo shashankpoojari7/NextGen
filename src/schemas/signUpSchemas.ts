@@ -6,6 +6,10 @@ export const usernameSchema = z
   .min(3, { message: "Username must be at least 3 characters long" })
   .max(20, { message: "Username must be at most 20 characters long" })
 
+export const fullnameSchema = z
+  .string()
+  .min(3, { message: "Full name must be at least 3 characters long" })
+
 
 export const signUpSchema = z.object({
   identifier: z
@@ -25,9 +29,7 @@ export const signUpSchema = z.object({
     .regex(/[0-9]/, { message: "Password must include at least one number" })
     .regex(/[^A-Za-z0-9]/, { message: "Password must include at least one special character" }),
 
-  fullname: z
-    .string()
-    .min(3, { message: "Full name must be at least 3 characters long" }),
+  fullname: fullnameSchema,
 
   username: usernameSchema,
 
@@ -43,3 +45,8 @@ export const signUpSchema = z.object({
     ),
 });
 
+export const updateProfile = z.object({
+  username: usernameSchema,
+  fullname: fullnameSchema,
+  bio: z.string()
+})

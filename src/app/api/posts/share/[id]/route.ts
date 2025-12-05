@@ -7,7 +7,7 @@ import Post from "@/models/post.model";
 import Share from "@/models/share.model";
 
 
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }>  }) {
 
   const { id : postId } = await params
   const userId = request.headers.get("x-user-id")

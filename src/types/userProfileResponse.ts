@@ -1,12 +1,3 @@
-export interface UserProfilePosts {
-  _id: string;
-  userId: string;
-  imageUrl: string;
-  likeCount: number;
-  commentCount: number;
-  shareCount: number;
-}
-
 export interface UserProfile {
   _id: string;
   username: string;

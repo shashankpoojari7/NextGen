@@ -6,7 +6,6 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
-import { toast } from "sonner";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -27,54 +26,56 @@ export const authOptions: NextAuthOptions = {
       credentials: {
         identifier: { label: "Identifier", type: "text" },
         password: { label: "Password", type: "password" },
-    },
-    async authorize(credentials: any) {
-    try {
-      if (!credentials?.identifier || !credentials?.password) {
-        throw new Error("Missing identifier or password");
-      }
+      },
+      async authorize(credentials: any) {
+        try {
+          if (!credentials?.identifier || !credentials?.password) {
+            throw new Error("Missing identifier or password");
+          }
 
-      await dbConnect();
+          await dbConnect();
 
-      const user = await User.findOne({
-        $or: [
-          { email: credentials.identifier.trim().toLowerCase() },
-          { username: credentials.identifier.trim().toLowerCase() },
-          { mobile: credentials.identifier.trim() },
-        ],
-      });
+          const user = await User.findOne({
+            $or: [
+              { email: credentials.identifier.trim().toLowerCase() },
+              { username: credentials.identifier.trim().toLowerCase() },
+              { mobile: credentials.identifier.trim() },
+            ],
+          });
 
-      if (!user) {
-        throw new Error("No user found with this Email, Username or Mobile Number");
-      }
+          if (!user) {
+            throw new Error("No user found with this Email, Username or Mobile Number");
+          }
 
-      if (user.authProvider !== "credentials") {
-        throw new Error(`Please log in using your ${user.authProvider} account`);
-      }
+          if (user.authProvider !== "credentials") {
+            throw new Error(`Please log in using your ${user.authProvider} account`);
+          }
 
-      if (!user.password) {
-        throw new Error("This account does not have a password set");
-      }
+          if (!user.password) {
+            throw new Error("This account does not have a password set");
+          }
 
-      const isValidPassword = await user.isPasswordCorrect(credentials.password);
+          const isValidPassword = await user.isPasswordCorrect(credentials.password)
+          
+          if (!isValidPassword) {
+            throw new Error("Incorrect password");
+          }
 
-      if (!isValidPassword) {
-        throw new Error("Incorrect password");
-      }
-
-      return {
-        id: user._id.toString(),
-        _id: user._id.toString(),
-        username: user.username,
-        email: user.email,
-        fullname: user.fullname,
-        authProvider: user.authProvider,
-      };
-    } catch (error: any) {
-      console.error("Authorize Error:", error.message);
-      throw new Error(error.message || "Authentication failed");
-    }
-  },
+          return {
+          id: user._id.toString(),
+          name: user.fullname,
+          email: user.email,
+          image: user.profile_image || "",
+          username: user.username,
+          _id: user._id.toString(),
+          fullname: user.fullname,
+          authProvider: user.authProvider,
+        };
+        } catch (error: any) {
+          console.error("Authorize Error:", error.message);
+          throw new Error(error.message || "Authentication failed");
+        }
+      },
     }),
   ],
   callbacks: {
@@ -94,7 +95,7 @@ export const authOptions: NextAuthOptions = {
           username: uniqueUsername,
           authProvider: account.provider,
           emailVerified: new Date(),
-          profile_image: user.image || "",
+          profile_image: "",
         });
 
         await newUser.save();
@@ -109,7 +110,7 @@ export const authOptions: NextAuthOptions = {
           existingUser.authProvider = account.provider;
         }
 
-        if (user.image && existingUser.profile_image !== user.image) {
+        if (user.image && !existingUser.profile_image) {
           existingUser.profile_image = user.image;
         }
 
@@ -124,19 +125,31 @@ export const authOptions: NextAuthOptions = {
         user._id = existingUser._id.toString();
         user.email = existingUser.email;
         user.fullname =existingUser.fullname
+        user.image = existingUser.profile_image?.toString() || ""
       }
       return true;
     },
     async redirect({ url, baseUrl }) {
       return url;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id;
         token.username = user.username;
         token.email = user.email;
         token._id = user.id;
         token.fullname = user.fullname
+        token.image = user.image
+      }
+      if (trigger === "update") {
+        const freshUser = await User.findById(token.id).select("id username email fullname profile_image");
+
+        if (freshUser) {
+          token.username = freshUser.username;
+          token.email = freshUser.email;
+          token.fullname = freshUser.fullname;
+          token.image = freshUser.profile_image
+        } 
       }
       return token;
     },
@@ -147,6 +160,7 @@ export const authOptions: NextAuthOptions = {
       session.user.email = token.email as string;
       session.user._id = token._id as string;
       session.user.fullname = token.fullname as string;
+      session.user.image = token.image as string;
       return session;
     },
   },

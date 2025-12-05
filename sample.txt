@@ -1,0 +1,12 @@
+"scripts": {
+  "dev": "NEXT_DISABLE_TURBOPACK=1 node server/server.js",
+  "dev:socket": "NEXT_DISABLE_TURBOPACK=1 ts-node server/server.ts",
+  
+  "build:socket": "tsc -p tsconfig.server.json",
+  "start:socket": "NODE_ENV=production node dist-server/server.js",
+
+  "build": "next build --webpack",
+  "start": "NODE_ENV=production NEXT_DISABLE_TURBOPACK=1 node server.js",
+
+  "lint": "eslint"
+},

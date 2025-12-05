@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getPublicPosts } from "@/services/getPublicPosts";
-import { IncomingPostData } from "@/app/(app)/home/HomePage";
+import { IncomingPostData } from "@/types/postResponseType";
 
 export function usePublicPosts() {
   return useQuery<IncomingPostData[]>({

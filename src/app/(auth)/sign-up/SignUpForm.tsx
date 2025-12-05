@@ -54,7 +54,8 @@ export default function SignUpForm() {
       if(debouncedValue){
         setIsCheckingUsername(true)
         try {
-          const response = await axios.post<ApiResponse>(`/api/user/check-unique-username/${debouncedValue}`)
+          const response = await axios.get<ApiResponse>(`/api/user/check-unique-username/${debouncedValue}`)
+          console.log(response)
           if(response.data.success) {
             setUserMessage(response.data.message)
             setUniqueUsername(true)

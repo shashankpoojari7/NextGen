@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  allowedDevOrigins: [],
   images: {
     remotePatterns: [
       {
@@ -24,6 +25,9 @@ const nextConfig: NextConfig = {
         hostname: 'randomuser.me',
       },
     ],
+  },
+  experimental: {
+    turbopackUseSystemTlsCerts: true,
   },
 };
 
