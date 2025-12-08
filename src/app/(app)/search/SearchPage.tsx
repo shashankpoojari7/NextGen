@@ -66,18 +66,18 @@ function SearchPage() {
   return (
     <>
       {/* Search Header */}
-      <div className="flex w-full px-4 py-4">
-        <h2 className="text-3xl font-semibold text-gray-300">Search</h2>
+      <div className="flex w-full p-4">
+        <h2 className="text-3xl font-semibold text-gray-900 dark:text-gray-300">Search</h2>
       </div>
 
       {/* Search Input */}
-      <div className="flex border border-gray-700 rounded-lg px-4 py-2 mb-4 bg-black mx-3 items-center">
+      <div className="flex border border-gray-400 dark:border-gray-700 rounded-lg px-4 py-2 mb-4 dark:bg-black mx-3 items-center">
         <input
           type="text"
           autoFocus
           value={inputValue}
           placeholder="Search..."
-          className="w-full bg-transparent text-gray-200 text-sm focus:outline-none"
+          className="w-full bg-transparent text-gray-700 dark:text-gray-200 text-sm focus:outline-none"
           onChange={(e) => setInputValue(e.target.value)}
         />
 

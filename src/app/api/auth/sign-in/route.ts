@@ -29,7 +29,7 @@ export async function POST(request: Request) {
   try {
     const query: any = identifier.includes("@")
       ? { email: identifier.trim().toLowerCase() }
-      : { mobile: identifier.trim() };
+      : { username: identifier.trim() };
 
     const user = await User.findOne(query);
     console.log("user",user)

@@ -53,17 +53,19 @@ export default function Post({ post }: PostProps) {
     await createComment({ postId: _id, comment });
 
     setLocalComments((prev) => [
-      { username, text: comment },
+      { username: session?.user?.username as string, text: comment },
       ...prev,
     ]);
 
-    socket.emit("notification", {
-      to: userId,  
-      from: session?.user?.id,
-      entityId: _id,
-      type: "COMMENT",
-      comment,
-    });
+    if (userId !== session?.user?.id) {
+      socket.emit("notification", {
+        to: userId,
+        from: session?.user?.id,
+        entityId: _id,
+        type: "COMMENT",
+        comment,
+      });
+    }
 
     setComment("");
   };
@@ -85,16 +87,16 @@ export default function Post({ post }: PostProps) {
             </div>
           </div>
 
-          <div className="flex grow flex-col justify-center text-white pl-3">
+          <div className="flex grow flex-col justify-center text-black dark:text-white pl-3">
             <Link href={`/profile/${username}`}>
               <p className="text-[14px] font-semibold">{username}</p>
             </Link>
-            <p className="text-[12px] text-gray-400">
+            <p className="text-[12px] text-gray-600 dark:text-gray-400">
               {timeAgo} {location && `· ${location}`}
             </p>
           </div>
 
-          <div className="flex justify-center items-center ml-auto h-full p-3 text-gray-400 hover:text-gray-100 transition">
+          <div className="flex justify-center items-center ml-auto h-full p-3 text-gray-900 hover:text-gray-500 dark:text-gray-400 dark:hover:text-gray-100 transition">
             <Ellipsis />
           </div>
         </section>
@@ -102,7 +104,7 @@ export default function Post({ post }: PostProps) {
         {/* Post Image */}
         <section
           onClick={() => setOpenModal(true)}
-          className="w-full bg-black flex justify-center items-center rounded-sm overflow-hidden"
+          className="w-full bg-white dark:bg-black flex justify-center items-center rounded-sm overflow-hidden"
           style={{ border: "0.1px solid #2a2a2a" }}
         >
           <img
@@ -124,8 +126,8 @@ export default function Post({ post }: PostProps) {
 
           {/* Caption */}
           <div className="w-full px-1 py-1 text-[14px]">
-            <span className="font-bold mr-2">{username}</span>
-            <span className="font-medium text-gray-300">{caption}</span>
+            <span className="font-bold mr-2  text-black dark:text-white">{username}</span>
+            <span className="font-medium text-gray-700 dark:text-gray-300">{caption}</span>
           </div>
 
           {/* ✓ Show Optimistic Feed Comments ABOVE the form */}
@@ -133,8 +135,8 @@ export default function Post({ post }: PostProps) {
             <div className="px-1 space-y-1">
               {localComments.map((c, index) => (
                 <div key={index} className="text-sm">
-                  <span className="font-semibold mr-2">{c.username}</span>
-                  <span className="text-gray-300">{c.text}</span>
+                  <span className="font-semibold mr-2  text-black dark:text-white">{c.username}</span>
+                  <span className="text-gray-700 dark:text-gray-300">{c.text}</span>
                 </div>
               ))}
             </div>
@@ -143,7 +145,7 @@ export default function Post({ post }: PostProps) {
           {/* Comment Input */}
           <form onSubmit={handleSubmit} className="flex w-full gap-2 items-center mt-1">
             <input
-              className="flex-1 bg-transparent text-sm text-gray-200 outline-none"
+              className="flex-1 bg-transparent text-sm text-gray-800 dark:text-gray-200 outline-none"
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               placeholder="Add a comment..."

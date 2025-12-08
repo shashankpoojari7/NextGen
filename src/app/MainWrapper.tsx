@@ -14,10 +14,12 @@ import { useActiveChatStore } from "@/store/useActiveChatStore";
 import { usePathname } from 'next/navigation';
 import { useDrawerStore } from '@/store/useDrawerStore';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import SplashScreen from '@/components/SplashScreen';
 
 const queryClient = new QueryClient()
 
 export function MainWrapper({ children }: { children: React.ReactNode }) {
+  const [showSplash, setShowSplash] = useState(true);
   const [notification, setNotification] = useState(null);
   const pathname = usePathname();
   const incrementNotification = useNotificationStore((s) => s.incrementNotification);
@@ -52,6 +54,10 @@ export function MainWrapper({ children }: { children: React.ReactNode }) {
       socket.off("notification", handler);
     };
   }, [activePeerId, incrementNotification, addUnreadUser, isNotificationDrawerOpen]);
+
+  if (showSplash) {
+    return <SplashScreen onComplete={() => setShowSplash(false)} />;
+  }
 
   return (
     <SessionProvider>

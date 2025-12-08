@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
-import argon2 from "argon2";
+import * as argon2 from "argon2";
 
 const PEPPER: string = process.env.PEPPER_KEY!;
 
@@ -101,6 +101,8 @@ userSchema.pre("save", async function (next) {
 
 userSchema.methods.isPasswordCorrect = async function (password: string) {
   const pepperedPassword = password + PEPPER;
+
+  console.log(PEPPER);
   console.log(pepperedPassword);
   
   return await argon2.verify(this.password, pepperedPassword);

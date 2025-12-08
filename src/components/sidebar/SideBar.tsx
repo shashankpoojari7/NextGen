@@ -127,7 +127,7 @@ function SideBar() {
           fixed top-0 left-0 h-screen hidden md:block 
           dark:bg-[#151515] bg-[#97bfb4] border-r text-white px-3 py-2 z-50
           transition-all duration-300 ease-in-out
-          ${isNotificationDrawerOpen ? "w-20" : " w-20 lg:w-60"}
+          ${isNotificationDrawerOpen ? "w-20" : "w-20 lg:w-60"}
         `}
         style={{ borderRight: "1px solid rgba(255,255,255,0.1)" }}
       >
@@ -136,7 +136,7 @@ function SideBar() {
           <div className="flex flex-col">
             <div className={`flex h-25 items-center w-full ${isNotificationDrawerOpen ? "justify-center" : "justify-center lg:pl-3 lg:justify-start"}`}>
               <h2
-                className={`curly-heading text-text text-2xl text-text font-bold ${isNotificationDrawerOpen ? "hidden" : "hidden lg:block"}`}
+                className={`curly-heading text-black dark:text-white text-2xl text-text font-bold ${isNotificationDrawerOpen ? "hidden" : "hidden lg:block"}`}
               >
                 NextGen
               </h2>
@@ -153,7 +153,9 @@ function SideBar() {
             <div className="flex flex-col justify-start space-y-2 mb-3">
               <Link
                 href="/"
-                className="flex w-full items-center px-2 py-3 dark:hover:text-black rounded-sm hover:bg-[#97bfb4]"
+                className="
+                  flex w-full items-center px-2 py-3 rounded-sm text-black dark:text-white hover:bg-[#7caea3] 
+                  dark:hover:bg-[#1f1f1f] hover:text-black dark:hover:text-white transition-all duration-200"
               >
                 <div className={`w-full flex items-center gap-2 ${isNotificationDrawerOpen ? "justify-center" : "justify-center lg:justify-start"}`}>
                   <HomeIcon className="w-6 h-6 block" />
@@ -165,7 +167,9 @@ function SideBar() {
 
               <Link
                 href="/search"
-                className="flex w-full items-center px-2 py-3 dark:hover:text-black rounded-sm hover:bg-[#97bfb4]"
+                className="
+                  flex w-full items-center px-2 py-3 rounded-sm text-black dark:text-white hover:bg-[#7caea3] 
+                  dark:hover:bg-[#1f1f1f] hover:text-black dark:hover:text-white transition-all duration-200"
               >
                 <div className={`w-full flex items-center gap-2 ${isNotificationDrawerOpen ? "justify-center" : "justify-center lg:justify-start"}`}>
                   <Search className="w-6 h-6 block" />
@@ -177,7 +181,9 @@ function SideBar() {
 
               <Link
                 href="/messages"
-                className="flex w-full items-center px-2 py-3 dark:hover:text-black rounded-sm hover:bg-[#97bfb4]"
+                className="
+                  flex w-full items-center px-2 py-3 rounded-sm text-black dark:text-white hover:bg-[#7caea3] 
+                  dark:hover:bg-[#1f1f1f] hover:text-black dark:hover:text-white transition-all duration-200"
               >
                 <div className={`relative w-full flex items-center gap-2 ${isNotificationDrawerOpen ? "justify-center" : "justify-center lg:justify-start"}`}>
                   
@@ -196,7 +202,9 @@ function SideBar() {
               </Link>
 
               <div 
-                className="flex w-full items-center px-2 py-3 dark:hover:text-black rounded-sm hover:bg-[#97bfb4]"
+                className="
+                  flex w-full items-center px-2 py-3 rounded-sm text-black dark:text-white hover:bg-[#7caea3] 
+                  dark:hover:bg-[#1f1f1f] hover:text-black dark:hover:text-white transition-all duration-200"
                 onClick={toggle}
               >
                 <div className={`relative w-full flex items-center gap-2 ${isNotificationDrawerOpen ? "justify-center" : "justify-center lg:justify-start"}`}>
@@ -215,7 +223,10 @@ function SideBar() {
               {/* ✅ Add Post Dialog */}
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                  <div className="flex w-full items-center px-2 py-3 dark:hover:text-black rounded-sm hover:bg-[#97bfb4] cursor-pointer">
+                  <div className="
+                    flex w-full items-center px-2 py-3 rounded-sm text-black dark:text-white hover:bg-[#7caea3] 
+                    dark:hover:bg-[#1f1f1f] hover:text-black dark:hover:text-white transition-all duration-200"
+                  >
                     <div className={`w-full flex items-center gap-2 ${isNotificationDrawerOpen ? "justify-center" : "justify-center lg:justify-start"}`}>
                       <PlusCircle className="w-6 h-6 block" />
                       <span className={`text-[16px] ml-3 font-bold ${isNotificationDrawerOpen ? "hidden" : "hidden lg:block"}`}>
@@ -333,10 +344,18 @@ function SideBar() {
 
               <Link
                 href={`/profile/${session?.user?.username}`}
-                className="flex w-full items-center px-2 py-3 dark:hover:text-black rounded-sm hover:bg-[#97bfb4]"
+                className="
+                  flex w-full items-center px-2 py-3 rounded-sm text-black dark:text-white hover:bg-[#7caea3] 
+                  dark:hover:bg-[#1f1f1f] hover:text-black dark:hover:text-white transition-all duration-200"
               >
                 <div className={`w-full flex items-center gap-2 ${isNotificationDrawerOpen ? "justify-center" : "justify-center lg:justify-start"}`}>
-                  <User className="w-6 h-6 block" />
+                  <img
+                    src={session?.user?.image || "/no-profile.jpg"}
+                    alt="profile"
+                    width={32}
+                    height={32}
+                    className="rounded-full border object-cover w-8 h-8"
+                  />
                   <span className={`text-[16px] ml-3 font-bold ${isNotificationDrawerOpen ? "hidden" : "hidden lg:block"}`}>
                     Profile
                   </span>
@@ -348,7 +367,9 @@ function SideBar() {
           <div className="flex flex-col space-y-2 mb-3">
             <Link
               href="/settings"
-              className="flex w-full items-center px-2 py-3 dark:hover:text-black rounded-sm hover:bg-[#97bfb4]"
+              className="
+                  flex w-full items-center px-2 py-3 rounded-sm text-black dark:text-white hover:bg-[#7caea3] 
+                  dark:hover:bg-[#1f1f1f] hover:text-black dark:hover:text-white transition-all duration-200"
             >
               <div className={`w-full flex items-center gap-2 ${isNotificationDrawerOpen ? "justify-center" : "justify-center lg:justify-start"}`}>
                 <Settings className="w-6 h-6 block" />
@@ -360,7 +381,9 @@ function SideBar() {
 
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <div className="flex w-full items-center px-2 py-3 dark:hover:text-black rounded-sm hover:bg-[#bf4a4a] cursor-pointer">
+                <div className="
+                    flex w-full items-center px-2 py-3 rounded-sm text-black dark:text-white 
+                    dark:hover:bg-[#1f1f1f] hover:text-black dark:hover:text-white transition-all duration-200 hover:bg-[#bf4a4a] cursor-pointer">
                   <div className={`w-full flex items-center gap-2 ${isNotificationDrawerOpen ? "justify-center" : "justify-center lg:justify-start"}`}>
                     <LogOut className="w-6 h-6 block" />
                     <span className={`text-[16px] ml-3 font-bold ${isNotificationDrawerOpen ? "hidden" : "hidden lg:block"}`}>

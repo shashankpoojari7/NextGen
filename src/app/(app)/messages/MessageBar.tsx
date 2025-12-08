@@ -16,7 +16,6 @@ function MessageBar() {
   const [debouncedSearch] = useDebounceValue(search, 500);
   const queryClient = useQueryClient()
 
-  // Use empty array as default data to prevent .map() crashes if hook returns undefined initially
   const { data: searchResults = [], isLoading: searchLoading } = useChatSearch(debouncedSearch);
   const { data: conversations = [], isLoading: convoLoading } = useConversationList();
 
@@ -38,19 +37,19 @@ function MessageBar() {
   const onlineUsers = useOnlineStore((state) => state.onlineUsers)
 
   return (
-    <div className="h-screen w-full px-3 py-2 bg-[#151515] text-white">
+    <div className="h-screen w-full px-3 py-2 bg-white dark:bg-[#151515] text-black dark:text-white">
       {/* Header */}
-      <div className="flex w-full px-1 py-2">
-        <h2 className="text-[25px] font-semibold">Chats</h2>
+      <div className="flex w-full p-2 md:p-3">
+        <h2 className="text-3xl font-semibold text-gray-900 dark:text-gray-300">Chats</h2>
       </div>
 
       {/* Search Input */}
-      <div className="flex w-full py-2">
-        <Input
+      <div className="flex border border-gray-400 dark:border-gray-700 rounded-lg px-3 py-2 mb-4 mt-2  items-center">
+        <input
           placeholder="Search..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full bg-transparent border border-gray-500/40 text-gray-200"
+          className="w-full bg-transparent text-gray-700 dark:text-gray-200 text-sm focus:outline-none"
         />
       </div>
 
@@ -120,8 +119,8 @@ function MessageBar() {
                 
                 // Determine CSS classes based on unread status (WhatsApp/Instagram style)
                 const messageClass = isUnread 
-                  ? "text-[12px] font-bold text-white truncate" 
-                  : "text-[12px] text-gray-400 truncate";       
+                  ? "text-[12px] font-bold text-black dark:text-white truncate" 
+                  : "text-[12px] text-gray-600 dark:text-gray-400 truncate";       
                 
                 return (
                   <Link key={convo.conversationId} href={`/messages/${convo.peerId}`}>

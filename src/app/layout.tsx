@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { MainWrapper } from "@/app/MainWrapper";
+import SplashScreen from "@/components/SplashScreen";
 
 export const metadata: Metadata = {
   title: "NextGen",

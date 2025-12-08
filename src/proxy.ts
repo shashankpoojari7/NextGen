@@ -57,3 +57,8 @@ export async function proxy(req: NextRequest) {
 //   matcher: ["/((?!_next|api/auth).*)"], 
 //   runtime: "nodejs"
 // };
+export const config = {
+  matcher: [
+    '/((?!api/user/check-unique-username|api/auth|_next/static|_next/image|favicon.ico).*)',
+  ],
+};

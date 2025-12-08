@@ -249,21 +249,21 @@ export default function ChatTest({ peerId }: { peerId: string }) {
   const isOnline = onlineUsers.has(peerId);
 
   return (
-    <div className="flex flex-col bg-linear-to-b from-[#0e0e0f] via-[#0a0a0b] to-[#000000]" style={{ height: "100dvh" }}>
+    <div className="flex flex-col bg-white dark:bg-linear-to-b dark:from-[#0e0e0f] dark:via-[#0a0a0b] dark:to-[#000000]" style={{ height: "100dvh" }}>
       {/* Header */}
-      <div className="shrink-0 sticky top-0 z-30 bg-[#0e0e0f] border-b border-[#1a1a1c]">
+      <div className="shrink-0 sticky top-0 z-30 bg-white dark:bg-[#0e0e0f] border-b border-gray-200 dark:border-[#1a1a1c]">
         <div className="flex items-center justify-between px-3 sm:px-4 py-3">
           <div className="flex items-center gap-3 flex-1 min-w-0">
             <button
               onClick={() => router.push("/messages")}
-              className="p-2 hover:bg-slate-700/50 rounded-xl transition-all duration-200"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700/50 rounded-xl transition-all duration-200"
             >
-              <ArrowLeft size={22} className="text-white" />
+              <ArrowLeft size={22} className="text-gray-900 dark:text-white" />
             </button>
 
             <div className="relative">
               <div className="h-11 w-11 sm:h-12 sm:w-12 rounded-full overflow-hidden bg-linear-to-br from-blue-500 to-purple-600 p-0.5">
-                <div className="h-full w-full rounded-full overflow-hidden bg-slate-800">
+                <div className="h-full w-full rounded-full overflow-hidden bg-gray-200 dark:bg-slate-800">
                   <img
                     src={peerInfo?.profile_image || "/no-profile.jpg"}
                     className="h-full w-full object-cover"
@@ -273,30 +273,30 @@ export default function ChatTest({ peerId }: { peerId: string }) {
               </div>
 
               {isOnline && (
-                <div className="absolute bottom-0 right-0 h-3 w-3 bg-green-500 rounded-full border-2 border-slate-900" />
+                <div className="absolute bottom-0 right-0 h-3 w-3 bg-green-500 rounded-full border-2 border-white dark:border-slate-900" />
               )}
             </div>
 
             <div className="flex flex-col min-w-0 flex-1">
               <Link href={`/profile/${peerInfo?.username}`}>
-                <p className="text-base font-semibold text-white truncate hover:text-blue-400 transition-colors">
+                <p className="text-base font-semibold text-gray-900 dark:text-white truncate hover:text-blue-500 dark:hover:text-blue-400 transition-colors">
                   {peerInfo?.username || "Loading..."}
                 </p>
               </Link>
               {isTyping ? (
-                <p className="text-xs text-blue-400 font-medium animate-pulse">
+                <p className="text-xs text-blue-500 dark:text-blue-400 font-medium animate-pulse">
                     typing...
                 </p>
               ) : isOnline ? (
-                <p className="text-xs text-green-400 font-medium">
+                <p className="text-xs text-green-500 dark:text-green-400 font-medium">
                   Active now
                 </p>
               ) : null}
             </div>
           </div>
 
-          <button className="p-2 hover:bg-slate-700/50 rounded-xl transition-all duration-200">
-            <MoreVertical size={18} className="text-white/80" />
+          <button className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700/50 rounded-xl transition-all duration-200">
+            <MoreVertical size={18} className="text-gray-700 dark:text-white/80" />
           </button>
         </div>
       </div>
@@ -313,11 +313,11 @@ export default function ChatTest({ peerId }: { peerId: string }) {
               className="h-7 w-7 sm:h-8 sm:w-8 rounded-full object-cover mr-1 mt-3 sm:mt-2 mb-1 sm:mr-2.5 self-end"
               alt="Typing"
             />
-            <div className="bg-slate-700/90 backdrop-blur-sm px-4 py-4 rounded-2xl shadow-lg">
+            <div className="bg-gray-200 dark:bg-slate-700/90 dark:backdrop-blur-sm px-4 py-4 rounded-2xl">
               <div className="flex items-center gap-1.5">
-                <span className="h-2 w-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></span>
-                <span className="h-2 w-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }}></span>
-                <span className="h-2 w-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }}></span>
+                <span className="h-2 w-2 bg-blue-500 dark:bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></span>
+                <span className="h-2 w-2 bg-blue-500 dark:bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }}></span>
+                <span className="h-2 w-2 bg-blue-500 dark:bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }}></span>
               </div>
             </div>
           </div>
@@ -331,7 +331,11 @@ export default function ChatTest({ peerId }: { peerId: string }) {
 
           const bubbleBgClass = isMe 
             ? "bg-blue-600" 
-            : "bg-slate-700/90 backdrop-blur-sm";
+            : "bg-gray-200 dark:bg-slate-700/90 dark:backdrop-blur-sm";
+
+          const textColorClass = isMe
+            ? "text-white"
+            : "text-gray-900 dark:text-white";
 
           const marginBottom = isGroupedBelow ? "mb-1" : "mb-1";
           return (
@@ -355,13 +359,13 @@ export default function ChatTest({ peerId }: { peerId: string }) {
                   <div className="w-7 sm:w-8 mr-3 sm:mr-4" />
                 )}
 
-                <div className={`relative max-w-[75%] sm:max-w-[70%] py-2 px-3 text-sm sm:text-base leading-relaxed shadow-lg text-white rounded-2xl wrap-break-word break-all whitespace-pre-wrap 
+                <div className={`relative max-w-[75%] sm:max-w-[70%] py-2 px-3 text-sm sm:text-base leading-relaxed ${textColorClass} rounded-2xl wrap-break-word break-all whitespace-pre-wrap 
                     ${bubbleBgClass} 
                     ${isMe ? "rounded-bl-2xl" : "rounded-br-2xl"}
                 `}>
                   {m.text}
                   {/* Optional: Add TimeStamp inside bubble */}
-                  <span className="block text-right text-[10px] text-white/50 mt-1 leading-none">
+                  <span className={`block text-right text-[10px] mt-1 leading-none ${isMe ? 'text-white/50' : 'text-gray-500 dark:text-white/50'}`}>
                     {getTimeOnly(m.createdAt)}
                   </span>
                 </div>
@@ -373,7 +377,7 @@ export default function ChatTest({ peerId }: { peerId: string }) {
       </div>
 
       {/* Input area */}
-      <div className="shrink-0 sticky bottom-0 bg-[#0e0e0f] border-t border-[#1a1a1c] p-3 sm:p-4 z-30">
+      <div className="shrink-0 sticky bottom-0 bg-white dark:bg-[#0e0e0f] border-t border-gray-200 dark:border-[#1a1a1c] p-3 sm:p-4 z-30">
         <form className="flex gap-2 sm:gap-3 max-w-4xl mx-auto" onSubmit={handleSubmit}>
           <div className="flex-1 relative">
             <input
@@ -386,8 +390,8 @@ export default function ChatTest({ peerId }: { peerId: string }) {
                 }
               }}
               placeholder="Type a message..."
-              className="w-full bg-[#131315] border border-[#1f1f21] text-white placeholder-gray-500 
-                rounded-2xl px-4 py-3 focus:outline-none focus:ring-0 focus:border-[#1f1f21]"
+              className="w-full bg-gray-100 dark:bg-[#131315] border border-gray-300 dark:border-[#1f1f21] text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 
+                rounded-2xl px-4 py-3 focus:outline-none focus:ring-0 focus:border-gray-300 dark:focus:border-[#1f1f21]"
             />
           </div>
 
@@ -397,7 +401,7 @@ export default function ChatTest({ peerId }: { peerId: string }) {
             className={`px-5 sm:px-6 rounded-2xl transition-all duration-200 shadow-lg ${
               text.trim()
                 ? "bg-blue-600 hover:bg-blue-700 active:scale-95"
-                : "bg-slate-700/50 cursor-not-allowed opacity-50"
+                : "bg-gray-300 dark:bg-slate-700/50 cursor-not-allowed opacity-50"
             }`}
           >
             <Send size={18} className="text-white" />

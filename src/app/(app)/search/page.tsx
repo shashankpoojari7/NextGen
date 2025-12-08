@@ -5,7 +5,7 @@ import SearchPage from './SearchPage'
 
 function page() {
   return (
-    <div className='w-full min-h-screen border border-gray-400/20'>
+    <div className='w-full min-h-screen border border-gray-300 dark:border-gray-400/20'>
       <SearchPage/>
     </div>
   )

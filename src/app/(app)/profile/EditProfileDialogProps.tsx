@@ -75,8 +75,13 @@ export default function EditProfileDialog({
   const watchedBio = watch("bio");
 
   useEffect(() => {
-    setValue(watchedUsername);
-  }, [watchedUsername, setValue]);
+  const subscription = form.watch((value, { name }) => {
+    if (name === "username") {
+      setValue(value.username || "");
+    }
+  });
+  return () => subscription.unsubscribe();
+}, [form, setValue]);
 
   useEffect(() => {
     async function checkUsernameUnique(val: string) {

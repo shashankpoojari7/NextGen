@@ -32,6 +32,8 @@ export const authOptions: NextAuthOptions = {
           if (!credentials?.identifier || !credentials?.password) {
             throw new Error("Missing identifier or password");
           }
+          console.log("credentials",credentials);
+          
 
           await dbConnect();
 
