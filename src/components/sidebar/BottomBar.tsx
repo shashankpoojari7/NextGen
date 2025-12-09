@@ -3,12 +3,11 @@
 import Link from "next/link";
 import {
   HomeIcon,
-  Search,
   MessageCircle,
   PlusCircle,
   User,
-  Bell,
   Loader2,
+  UserPlus,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
@@ -23,7 +22,6 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
-import { ApiResponse } from "@/lib/ApiResponse";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNotificationStore } from "@/store/useNotificationStore"; 
@@ -107,8 +105,8 @@ export default function BottomBar() {
           <HomeIcon className="h-6 w-6" />
         </Link>
 
-        <Link href="/search" className="flex flex-col items-center text-gray-700 dark:text-white hover:text-gray-900 dark:hover:text-gray-300 transition">
-          <Search className="h-6 w-6" />
+        <Link href="/connect" className="flex flex-col items-center text-gray-700 dark:text-white hover:text-gray-900 dark:hover:text-gray-300 transition">
+          <UserPlus className="h-6 w-6" />
         </Link>
 
         <Dialog open={open} onOpenChange={setOpen}>

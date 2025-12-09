@@ -10,6 +10,7 @@ import {
   Search,
   Settings,
   User,
+  UserPlus,
 } from "lucide-react";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
@@ -177,6 +178,21 @@ function SideBar() {
                   <Search className="w-6 h-6 block" />
                   <span className={`text-[16px] ml-3 font-bold ${isNotificationDrawerOpen ? "hidden" : "hidden lg:block"}`}>
                     Search
+                  </span>
+                </div>
+              </Link>
+
+              <Link
+                href="/connect"
+                className="
+                  flex w-full items-center px-2 py-3 rounded-sm text-black dark:text-white 
+                  hover:bg-gray-100 dark:hover:bg-[#1f1f1f] 
+                  transition-all duration-200"
+              >
+                <div className={`w-full flex items-center gap-2 ${isNotificationDrawerOpen ? "justify-center" : "justify-center lg:justify-start"}`}>
+                  <UserPlus className="w-6 h-6 block" />
+                  <span className={`text-[16px] ml-3 font-bold ${isNotificationDrawerOpen ? "hidden" : "hidden lg:block"}`}>
+                    Connect
                   </span>
                 </div>
               </Link>
