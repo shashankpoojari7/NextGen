@@ -10,7 +10,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 
 export default function UpdateProfilePage() {
-
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { data, isLoading } = useUserSettings();
   const queryClient = useQueryClient();
@@ -44,7 +43,7 @@ export default function UpdateProfilePage() {
 
     setProfileImage(data.profile_image || null);
     setDebouncedUsername(data.username);
-  }, [data]);
+  }, [data, setDebouncedUsername]);
 
   useEffect(() => {
     const checkUsername = async () => {
@@ -79,7 +78,7 @@ export default function UpdateProfilePage() {
     const { name, value } = e.target;
     setIsChanged(true);
 
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -101,7 +100,6 @@ export default function UpdateProfilePage() {
     reader.readAsDataURL(file);
   };
 
-
   const handleSubmit = async () => {
     if (!isChanged) return;
 
@@ -122,7 +120,7 @@ export default function UpdateProfilePage() {
       const result = await axiosInstance.post("/api/user/update-profile", form);
 
       if (result.data.success) {
-        await update(); 
+        await update();
 
         queryClient.invalidateQueries({ queryKey: ["user-settings"] });
         toast.success("Profile updated!");
@@ -139,22 +137,15 @@ export default function UpdateProfilePage() {
     }
   };
 
-  // -----------------------------
-  // SKELETON
-  // -----------------------------
+  // Skeleton
   if (isLoading) {
-    return (
-      <div className="animate-pulse p-10 min-h-screen"></div>
-    );
+    return <div className="animate-pulse p-10 min-h-screen" />;
   }
 
-  // -----------------------------
   // UI
-  // -----------------------------
   return (
     <div className="min-h-screen bg-white dark:bg-[#0a0a0a] text-black dark:text-white p-6 md:p-10">
       <div className="max-w-3xl mx-auto">
-
         {/* Back Button */}
         <button
           onClick={() => window.history.back()}
@@ -165,9 +156,8 @@ export default function UpdateProfilePage() {
         </button>
 
         {/* Profile Card */}
-        <div className="bg-[#97bfb4] dark:bg-[#7da89e] text-white rounded-xl p-8 shadow-xl">
+        <div className="bg-[#97bfb4] dark:bg-[#7da89e] text-white rounded-3xl p-8 shadow-xl">
           <div className="flex items-center gap-6">
-
             {/* Image */}
             <div className="relative">
               <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-white/40 shadow-lg">
@@ -189,26 +179,35 @@ export default function UpdateProfilePage() {
             {/* User Info */}
             <div>
               <h2 className="text-3xl font-bold">{formData.fullname}</h2>
-              <p className="opacity-80">@{formData.username}</p>
+              <p className="opacity-90">@{formData.username}</p>
             </div>
           </div>
 
-          <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            className="hidden"
+          />
         </div>
 
         {/* FORM */}
         <div className="space-y-6 mt-6">
-
           {/* Username */}
           <div>
-            <label className="font-semibold">Username</label>
+            <label className="font-semibold mb-1 block">Username</label>
 
             <div className="relative">
               <input
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
-                className="w-full bg-[#1a1a1a] text-white border border-gray-700 rounded-xl px-4 py-3"
+                className="w-full bg-white dark:bg-[#1a1a1a] 
+                          text-black dark:text-white 
+                          border border-gray-300 dark:border-gray-700 
+                          rounded-2xl px-4 py-3 outline-none 
+                          focus:ring-2 focus:ring-[#97bfb4] dark:focus:ring-[#7da89e]"
               />
 
               <span className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -216,16 +215,20 @@ export default function UpdateProfilePage() {
                   <Loader2 className="animate-spin text-gray-400" size={18} />
                 ) : usernameMessage ? (
                   isUsernameUnique ? (
-                    <CircleCheck className="text-green-400" size={18} />
+                    <CircleCheck className="text-green-500" size={18} />
                   ) : (
-                    <CircleX className="text-red-400" size={18} />
+                    <CircleX className="text-red-500" size={18} />
                   )
                 ) : null}
               </span>
             </div>
 
             {usernameMessage && (
-              <p className={`text-sm mt-1 ${isUsernameUnique ? "text-green-500" : "text-red-400"}`}>
+              <p
+                className={`text-sm mt-1 ${
+                  isUsernameUnique ? "text-green-600" : "text-red-500"
+                }`}
+              >
                 {usernameMessage}
               </p>
             )}
@@ -233,23 +236,31 @@ export default function UpdateProfilePage() {
 
           {/* Fullname */}
           <div>
-            <label className="font-semibold">Full Name</label>
+            <label className="font-semibold mb-1 block">Full Name</label>
             <input
               name="fullname"
               value={formData.fullname}
               onChange={handleChange}
-              className="w-full bg-[#1a1a1a] text-white border border-gray-700 rounded-xl px-4 py-3"
+              className="w-full bg-white dark:bg-[#1a1a1a] 
+                        text-black dark:text-white 
+                        border border-gray-300 dark:border-gray-700 
+                        rounded-2xl px-4 py-3 outline-none
+                        focus:ring-2 focus:ring-[#97bfb4] dark:focus:ring-[#7da89e]"
             />
           </div>
 
           {/* Bio */}
           <div>
-            <label className="font-semibold">Bio</label>
+            <label className="font-semibold mb-1 block">Bio</label>
             <textarea
               name="bio"
               value={formData.bio}
               onChange={handleChange}
-              className="w-full h-32 bg-[#1a1a1a] text-white border border-gray-700 rounded-xl p-4"
+              className="w-full h-32 bg-white dark:bg-[#1a1a1a] 
+                        text-black dark:text-white 
+                        border border-gray-300 dark:border-gray-700 
+                        rounded-2xl p-4 outline-none
+                        focus:ring-2 focus:ring-[#97bfb4] dark:focus:ring-[#7da89e]"
             />
           </div>
 
@@ -257,13 +268,15 @@ export default function UpdateProfilePage() {
           <button
             onClick={handleSubmit}
             disabled={!isChanged || isSaving}
-            className="w-full bg-linear-to-r from-[#97bfb4] to-[#7da89e] text-white 
-                      py-4 rounded-xl flex justify-center items-center gap-3 disabled:opacity-50"
+            className="w-full bg-gradient-to-r from-[#97bfb4] to-[#7da89e] 
+                      text-white py-4 rounded-2xl 
+                      flex justify-center items-center gap-3 
+                      disabled:opacity-50 disabled:cursor-not-allowed
+                      shadow-md"
           >
             {isSaving ? <Loader2 className="animate-spin" /> : <Save />}
             Save Changes
           </button>
-
         </div>
       </div>
     </div>
