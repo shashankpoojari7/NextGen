@@ -268,7 +268,7 @@ export default function UpdateProfilePage() {
           <button
             onClick={handleSubmit}
             disabled={!isChanged || isSaving}
-            className="w-full bg-gradient-to-r from-[#97bfb4] to-[#7da89e] 
+            className="w-full bg-linear-to-r from-[#97bfb4] to-[#7da89e] 
                       text-white py-4 rounded-2xl 
                       flex justify-center items-center gap-3 
                       disabled:opacity-50 disabled:cursor-not-allowed
