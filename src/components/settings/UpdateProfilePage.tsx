@@ -156,11 +156,11 @@ export default function UpdateProfilePage() {
         </button>
 
         {/* Profile Card */}
-        <div className="bg-[#97bfb4] dark:bg-[#7da89e] text-white rounded-3xl p-8 shadow-xl">
-          <div className="flex items-center gap-6">
+        <div className="bg-[#97bfb4] dark:bg-[#7da89e] text-white rounded-3xl px-4 py-6 sm:py-8 sm:px-6 shadow-xl">
+          <div className="flex items-center gap-4 sm:gap-6">
             {/* Image */}
             <div className="relative">
-              <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-white/40 shadow-lg">
+              <div className="w-23 h-23 sm:w-28 sm:h-28 rounded-full overflow-hidden border-4 border-white/40 shadow-lg">
                 <img
                   src={profileImage || "/no-profile.jpg"}
                   className="w-full h-full object-cover"
@@ -172,14 +172,14 @@ export default function UpdateProfilePage() {
                 onClick={() => fileInputRef.current?.click()}
                 className="absolute bottom-0 right-0 bg-white p-2 rounded-full shadow"
               >
-                <Pencil className="w-4 h-4 text-[#97bfb4]" />
+                <Pencil className="w-2 h-2 sm:w-4 sm:h-4 text-[#97bfb4]" />
               </button>
             </div>
 
             {/* User Info */}
             <div>
-              <h2 className="text-3xl font-bold">{formData.fullname}</h2>
-              <p className="opacity-90">@{formData.username}</p>
+              <h2 className="text-xl sm:text-3xl font-bold">{formData.fullname}</h2>
+              <p className="opacity-90 text-sm sm:text-lg">@{formData.username}</p>
             </div>
           </div>
 
