@@ -42,7 +42,7 @@ export async function proxy(req: NextRequest) {
 
   if (pathname.startsWith("/api")) {
     const requestHeaders = new Headers(req.headers);
-    requestHeaders.set("x-user-id", String(token._id));
+    requestHeaders.set("x-user-id", String(token.id));
     requestHeaders.set("x-user-email", String(token.email));
     requestHeaders.set("x-username", String(token.username || ""));
     return NextResponse.next({

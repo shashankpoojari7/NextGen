@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { axiosInstance } from "@/services/axios";
 import { useQueryClient } from "@tanstack/react-query";
 import { useGlobalLoader } from "@/store/useGlobalLoader";
+import { socket } from "@/lib/socketClient";
 
 interface PostModalLayoutProps {
   post: IncomingPostData;
@@ -47,7 +48,7 @@ export default function PostModalLayout({
   const { data: session } = useSession();
   const queryClient = useQueryClient();
 
-  const isOwner = session?.user?._id === userId;
+  const isOwner = session?.user?.id === userId;
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -61,6 +62,15 @@ export default function PostModalLayout({
     if (!comment.trim()) return;
 
     await createComment({ postId: _id, comment });
+    if (userId !== session?.user?.id) {
+      socket.emit("notification", {
+        to: userId,
+        from: session?.user?.id,
+        entityId: _id,
+        type: "COMMENT",
+        comment,
+      });
+    }
     setComment("");
   };
 
@@ -89,7 +99,7 @@ export default function PostModalLayout({
           queryKey: ["user-profile", username],
         }),
         queryClient.invalidateQueries({
-          queryKey: ["feed-posts"],
+          queryKey: ["public-posts"],
         }),
       ]);
 
@@ -104,31 +114,31 @@ export default function PostModalLayout({
   // 🔹 DESKTOP LAYOUT (md and above)
   const desktopContent = (
     <div
-      className="hidden md:flex  bg-[#212328] mx-auto rounded-xl w-[90%]  max-h-[75vh] lg:max-h-[85vh] overflow-hidden"
+      className="hidden md:flex bg-white dark:bg-[#212328] mx-auto rounded-xl w-[90%] max-h-[75vh] lg:max-h-[85vh] overflow-hidden shadow-2xl"
       onClick={(e) => e.stopPropagation()}
     >
       {/* close */}
       <button
         onClick={onClose}
-        className="absolute top-4 right-6 text-white hover:text-gray-300 text-4xl font-light z-999"
+        className="absolute top-4 right-6 text-gray-700 dark:text-white hover:text-gray-500 dark:hover:text-gray-300 text-4xl font-light z-999"
       >
         ×
       </button>
       {/* LEFT: IMAGE */}
-      <div className="flex-1 bg-black flex items-center justify-center">
+      <div className="flex-1 bg-gray-100 dark:bg-black flex items-center justify-center">
         <img src={imageUrl} alt={_id} className="w-full h-full object-contain xl:object-cover" />
       </div>
 
       {/* RIGHT: COMMENTS PANEL */}
-      <div className="w-[40%] text-white flex flex-col border-l border-gray-700">
+      <div className="w-[40%] text-gray-900 dark:text-white flex flex-col border-l border-gray-200 dark:border-gray-700">
         {/* HEADER */}
-        <div className="px-1 border-b border-gray-700/50">
+        <div className="px-1 border-b border-gray-200 dark:border-gray-700/50">
           <section className="flex w-full h-18 items-center">
             <div className="flex justify-center items-center px-2">
               <img
                 src={profile_image || "/no-profile.jpg"}
                 alt={username}
-                className="w-11 h-11 rounded-full object-cover bg-gray-800"
+                className="w-11 h-11 rounded-full object-cover bg-gray-200 dark:bg-gray-800"
               />
             </div>
 
@@ -136,22 +146,22 @@ export default function PostModalLayout({
               <Link href={`/profile/${username}`}>
                 <p className="text-[13px] lg:text-[14px] font-semibold">{username}</p>
               </Link>
-              <p className="text-[11px] lg:text-[12px] text-gray-400">
+              <p className="text-[11px] lg:text-[12px] text-gray-600 dark:text-gray-400">
                 {timeAgo} {location && `· ${location}`}
               </p>
             </div>
 
             <div className="ml-auto p-2 flex items-center justify-center overflow-visible"
             onClick={() => setIsPostOptionsOpen(true)}>
-              <Ellipsis className="text-gray-400 hover:text-white transition" />
+              <Ellipsis className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition cursor-pointer" />
             </div>
           </section>
         </div>
 
         {/* COMMENTS LIST */}
-        <div className="border-b border-gray-700/50 flex-1 overflow-y-auto p-4 space-y-4">
+        <div className="border-b border-gray-200 dark:border-gray-700/50 flex-1 overflow-y-auto p-4 space-y-4">
           {isLoading && (
-            <p className="text-gray-500 text-sm">Loading comments...</p>
+            <p className="text-gray-500 dark:text-gray-500 text-sm">Loading comments...</p>
           )}
 
           {comments?.map((c, index) => (
@@ -169,15 +179,15 @@ export default function PostModalLayout({
                   </Link>
 
                   {c.userId === postOwnerId && (
-                    <span className="text-[10px] bg-gray-700 text-gray-200 px-1.5 py-px rounded-sm">
+                    <span className="text-[10px] bg-blue-100 dark:bg-gray-700 text-blue-700 dark:text-gray-200 px-1.5 py-px rounded-sm">
                       Author
                     </span>
                   )}
 
-                  <span className="text-gray-300">{c.text}</span>
+                  <span className="text-gray-800 dark:text-gray-300">{c.text}</span>
                 </p>
 
-                <p className="text-gray-500 text-[10px] lg:text-xs">
+                <p className="text-gray-500 dark:text-gray-500 text-[10px] lg:text-xs">
                   {getTimeAgo(String(c.createdAt))}
                 </p>
               </div>
@@ -196,20 +206,20 @@ export default function PostModalLayout({
 
           <div className="w-full px-1.5 py-1 text-[13px] lg:text-[14px]">
             <Link href={`/profile/${username}`}>
-              <span className="font-bold mr-2 ">{username}</span>
+              <span className="font-bold mr-2">{username}</span>
             </Link>
-            <span className="text-gray-300">{caption}</span>
+            <span className="text-gray-700 dark:text-gray-300">{caption}</span>
           </div>
         </section>
 
         {/* ADD COMMENT */}
-        <div className="p-2 lg:p-4 border-t border-gray-700/50 ">
+        <div className="p-2 lg:p-4 border-t border-gray-200 dark:border-gray-700/50">
           <form
             onSubmit={handleSubmit}
             className="flex w-full gap-2 items-center"
           >
             <input
-              className="flex-1 bg-transparent text-sm text-gray-200 outline-none"
+              className="flex-1 bg-transparent text-sm text-gray-900 dark:text-gray-200 outline-none placeholder:text-gray-400 dark:placeholder:text-gray-500"
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               placeholder="Add a comment..."
@@ -217,7 +227,7 @@ export default function PostModalLayout({
             <button
               type="submit"
               disabled={isPending}
-              className={`text-blue-400 text-sm disabled:opacity-40 ${
+              className={`text-blue-500 dark:text-blue-400 text-sm font-semibold disabled:opacity-40 ${
                 !comment.trim() ? "hidden" : "block"
               }`}
             >
@@ -232,34 +242,34 @@ export default function PostModalLayout({
   // 🔹 MOBILE/TABLET LAYOUT (below md)
   const mobileContent = (
     <div
-      className="md:hidden bg-[#2a2d32] rounded-sm w-[85%] h-[70vh] sm:h-[90vh]
-                overflow-hidden flex flex-col mx-auto"
+      className="md:hidden bg-white dark:bg-[#2a2d32] rounded-sm w-[85%] h-[70vh] sm:h-[90vh]
+                overflow-hidden flex flex-col mx-auto shadow-2xl"
       onClick={(e) => e.stopPropagation()}
     >
       {/* close */}
       <button
         onClick={onClose}
-        className="absolute top-4 right-6 text-white hover:text-gray-300 text-4xl font-light z-999"
+        className="absolute top-4 right-6 text-gray-700 dark:text-white hover:text-gray-500 dark:hover:text-gray-300 text-4xl font-light z-999"
       >
         ×
       </button>
 
       {/* HEADER */}
-      <div className="px-1 border-b border-gray-700/50">
+      <div className="px-1 border-b border-gray-200 dark:border-gray-700/50">
         <section className="flex w-full h-15 sm:h-16 items-center">
           <div className="flex justify-center items-center px-2 sm:px-3">
             <img
               src={profile_image || "/no-profile.jpg"}
               alt={username}
-              className="w-10 h-10 sm:w-11 sm:h-11 rounded-full object-cover bg-gray-800"
+              className="w-10 h-10 sm:w-11 sm:h-11 rounded-full object-cover bg-gray-200 dark:bg-gray-800"
             />
           </div>
 
-          <div className="flex grow flex-col justify-center pl-1.5 sm:pl">
+          <div className="flex grow flex-col justify-center pl-1.5 sm:pl-2">
             <Link href={`/profile/${username}`}>
-              <p className="text-[13px] sm:text-[15px] font-semibold">{username}</p>
+              <p className="text-[13px] sm:text-[15px] font-semibold text-gray-900 dark:text-white">{username}</p>
             </Link>
-            <p className="text-[9px] sm:text-[11px] text-gray-400">
+            <p className="text-[9px] sm:text-[11px] text-gray-600 dark:text-gray-400">
               {timeAgo} {location && `· ${location}`}
             </p>
           </div>
@@ -268,18 +278,18 @@ export default function PostModalLayout({
             className="ml-auto p-2 flex items-center justify-center overflow-visible"
             onClick={() => setIsPostOptionsOpen(true)}
           >
-            <Ellipsis className="text-white w-5 h-5" />
+            <Ellipsis className="text-gray-700 dark:text-white w-5 h-5 cursor-pointer" />
           </div>
         </section>
       </div>
 
       {/* IMAGE */}
-      <div className="flex-1 bg-black flex items-center justify-center overflow-hidden">
+      <div className="flex-1 bg-gray-100 dark:bg-black flex items-center justify-center overflow-hidden">
         <img src={imageUrl} alt={_id} className="w-full h-full object-contain" />
       </div>
 
       {/* ACTIONS + CAPTION */}
-      <div className="bg-[#2a2d32] px-2 py-1 sm:py-3 sm:px-3 border-t border-gray-700/50">
+      <div className="bg-white dark:bg-[#2a2d32] px-2 py-1 sm:py-3 sm:px-3 border-t border-gray-200 dark:border-gray-700/50">
         <PostActions
           postId={_id}
           postUserId={userId}
@@ -287,17 +297,17 @@ export default function PostModalLayout({
           initialLikes={likeCount}
         />
 
-        <p className="text-xs sm:text-sm text-white sm:mt-2">
+        <p className="text-xs sm:text-sm text-gray-900 dark:text-white sm:mt-2">
           <span className="font-semibold mr-2">{username}</span>
-          <span className="text-gray-200">{caption}</span>
+          <span className="text-gray-700 dark:text-gray-200">{caption}</span>
         </p>
       </div>
 
       {/* COMMENT FORM */}
-      <div className="p-2.5 sm:p-3 border-t border-gray-700/50 bg-[#2a2d32] mt-1 sm:mt-0">
+      <div className="p-2.5 sm:p-3 border-t border-gray-200 dark:border-gray-700/50 bg-white dark:bg-[#2a2d32] mt-1 sm:mt-0">
         <form onSubmit={handleSubmit} className="flex w-full">
           <input
-            className="flex-1 bg-transparent text-xs sm:text-sm text-gray-200 outline-none placeholder:text-gray-500"
+            className="flex-1 bg-transparent text-xs sm:text-sm text-gray-900 dark:text-gray-200 outline-none placeholder:text-gray-400 dark:placeholder:text-gray-500"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             placeholder="Add a comment..."
@@ -305,7 +315,7 @@ export default function PostModalLayout({
           <button
             type="submit"
             disabled={isPending}
-            className={`text-blue-400 text-xs sm:text-sm font-semibold disabled:opacity-40 ${
+            className={`text-blue-500 dark:text-blue-400 text-xs sm:text-sm font-semibold disabled:opacity-40 ${
               !comment.trim() ? "hidden" : "block"
             }`}
           >
@@ -317,25 +327,24 @@ export default function PostModalLayout({
   );
 
 
-  // ⭐️ CUSTOM OptionsModal (Reverted to original logic with Z-index adjustment)
+  // ⭐️ CUSTOM OptionsModal
   const OptionsModal = () => {
     if (!isPostOptionsOpen) return null;
 
     return (
       <div
-        // 🚨 IMPORTANT FIX: Increased z-index to ensure it sits above the main modal (z-500)
-        className="fixed inset-0 z-900 bg-black/60 flex items-center justify-center"
+        className="fixed inset-0 z-900 bg-black/60 dark:bg-black/60 flex items-center justify-center"
         onClick={() => setIsPostOptionsOpen(false)}
       >
         <div
-          className="bg-[#262626] w-[90%] max-w-[400px] text-[16px] rounded-xl overflow-hidden shadow-xl text-white"
+          className="bg-white dark:bg-[#262626] w-[90%] max-w-[400px] text-[16px] rounded-xl overflow-hidden shadow-xl text-gray-900 dark:text-white"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Owner options */}
           {isOwner ? (
             <>
               <button
-                className="w-full py-2 sm:py-4 text-blue-400 font-semibold border-b border-gray-700 hover:bg-[#333]"
+                className="w-full py-2 sm:py-4 text-blue-500 dark:text-blue-400 font-semibold border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-[#333]"
                 onClick={() => {
                   setIsPostOptionsOpen(false);
                 }}
@@ -344,7 +353,7 @@ export default function PostModalLayout({
               </button>
 
               <button
-                className="w-full py-2 sm:py-4 text-red-500 font-semibold border-b border-gray-700 hover:bg-[#333]"
+                className="w-full py-2 sm:py-4 text-red-500 dark:text-red-500 font-semibold border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-[#333]"
                 onClick={handleDeletePost}
               >
                 Delete Post
@@ -353,7 +362,7 @@ export default function PostModalLayout({
           ) : (
             <>
               <button
-                className="w-full py-2 sm:py-4 text-red-400 font-semibold border-b border-gray-700 hover:bg-[#333]"
+                className="w-full py-2 sm:py-4 text-red-500 dark:text-red-400 font-semibold border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-[#333]"
                 onClick={() => {
                   toast.info("Reported");
                   setIsPostOptionsOpen(false);
@@ -366,7 +375,7 @@ export default function PostModalLayout({
 
           {/* Cancel */}
           <button
-            className="w-full py-2 sm:py-4 text-gray-300 font-medium hover:bg-[#333]"
+            className="w-full py-2 sm:py-4 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-[#333]"
             onClick={() => setIsPostOptionsOpen(false)}
           >
             Cancel
@@ -387,7 +396,7 @@ export default function PostModalLayout({
   if (isEmbedded) return content;
 
   return (
-    <div className="fixed inset-0 bg-black/80  flex items-center justify-center z-500"
+    <div className="fixed inset-0 bg-white/95 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center z-500"
       onClick={onClose}
     >
       <div className="relative flex justify-center items-center w-full h-full"

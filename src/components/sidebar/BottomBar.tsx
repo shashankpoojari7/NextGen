@@ -100,20 +100,20 @@ export default function BottomBar() {
 
   return (
     <>
-      <div className="fixed bottom-0 left-0 w-full bg-[#151515] border-t border-gray-700 
+      <div className="fixed bottom-0 left-0 w-full bg-white dark:bg-[#151515] border-t border-gray-200 dark:border-gray-700 
                       md:hidden flex justify-between px-5 sm:px-10 py-4 z-50">
 
-        <Link href="/" className="flex flex-col items-center text-white">
+        <Link href="/" className="flex flex-col items-center text-gray-700 dark:text-white hover:text-gray-900 dark:hover:text-gray-300 transition">
           <HomeIcon className="h-6 w-6" />
         </Link>
 
-        <Link href="/search" className="flex flex-col items-center text-white">
+        <Link href="/search" className="flex flex-col items-center text-gray-700 dark:text-white hover:text-gray-900 dark:hover:text-gray-300 transition">
           <Search className="h-6 w-6" />
         </Link>
 
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <button className="flex flex-col items-center text-white">
+            <button className="flex flex-col items-center text-gray-700 dark:text-white hover:text-gray-900 dark:hover:text-gray-300 transition">
               <PlusCircle className="h-6 w-6" />
             </button>
           </DialogTrigger>
@@ -125,7 +125,7 @@ export default function BottomBar() {
               </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-5">
-              <div className="flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-4">
+              <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4">
                 {preview ? (
                   <>
                     <img
@@ -156,7 +156,7 @@ export default function BottomBar() {
                     />
                     <label
                       htmlFor="mobile-file"
-                      className="cursor-pointer flex flex-col items-center text-gray-400"
+                      className="cursor-pointer flex flex-col items-center text-gray-500 dark:text-gray-400"
                     >
                       <PlusCircle className="w-10 h-10 mb-2" />
                       <span>Tap to upload image</span>
@@ -172,7 +172,7 @@ export default function BottomBar() {
                   value={caption}
                   onChange={(e) => setCaption(e.target.value)}
                   rows={3}
-                  className="w-full p-2 border rounded-md bg-transparent focus:ring-2 focus:ring-[#97bfb4]"
+                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-transparent focus:ring-2 focus:ring-[#97bfb4] focus:border-transparent"
                   placeholder="Write a caption..."
                 />
               </div>
@@ -183,7 +183,7 @@ export default function BottomBar() {
                 <input
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  className="w-full p-2 border rounded-md bg-transparent focus:ring-2 focus:ring-[#97bfb4]"
+                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-transparent focus:ring-2 focus:ring-[#97bfb4] focus:border-transparent"
                   placeholder="e.g. Bangalore"
                 />
               </div>
@@ -197,11 +197,11 @@ export default function BottomBar() {
                   </Button>
                 </DialogClose>
 
-                <Button type="submit" disabled={isFormSubmitting}>
+                <Button type="submit" disabled={isFormSubmitting} className="bg-[#97bfb4] hover:bg-[#86aea3] text-white dark:text-black">
                   {isFormSubmitting ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
                   ) : (
-                    <span className="text-black">Post</span>
+                    <span>Post</span>
                   )}
                 </Button>
 
@@ -210,7 +210,7 @@ export default function BottomBar() {
           </DialogContent>
         </Dialog>
 
-        <Link href="/messages" className="relative flex flex-col items-center text-white">
+        <Link href="/messages" className="relative flex flex-col items-center text-gray-700 dark:text-white hover:text-gray-900 dark:hover:text-gray-300 transition">
           <div className="relative">
             <MessageCircle className="h-6 w-6" />
 
@@ -226,7 +226,7 @@ export default function BottomBar() {
 
         <Link
           href={`/profile/${session?.user?.username}`}
-          className="flex flex-col items-center text-white"
+          className="flex flex-col items-center text-gray-700 dark:text-white hover:text-gray-900 dark:hover:text-gray-300 transition"
         >
           <User className="h-6 w-6" />
         </Link>

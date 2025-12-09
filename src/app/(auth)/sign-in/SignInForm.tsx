@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 // Ensures the user can see what they're typing
 const PasswordInput = ({ name }: { name: string }) => {
   const [showPassword, setShowPassword] = useState(false);
-  const baseClasses = "mt-1 w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-3 py-2 pr-10 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 outline-none transition-colors";
+  const baseClasses = "mt-1 w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-3 py-2 pr-10 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:focus:ring-blue-400 focus:ring-opacity-50 outline-none transition-colors";
 
   return (
     <div className="relative">
@@ -27,7 +27,7 @@ const PasswordInput = ({ name }: { name: string }) => {
       <button
         type="button"
         onClick={() => setShowPassword(!showPassword)}
-        className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+        className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
         aria-label={showPassword ? "Hide password" : "Show password"}
       >
         {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
@@ -105,7 +105,7 @@ export function SignIn() {
               name="email"
               required
               placeholder="you@example.com"
-              className="mt-1 w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-3 py-2 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 outline-none transition-colors"
+              className="mt-1 w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-3 py-2 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:focus:ring-blue-400 focus:ring-opacity-50 outline-none transition-colors"
               disabled={isLoadingCredentials}
             />
           </div>
@@ -139,7 +139,7 @@ export function SignIn() {
         
         {/* Sign Up Link (Kept here for good flow after Login button) */}
         <p className="text-center text-sm text-gray-600 dark:text-gray-400">
-          Don’t have an account?{" "}
+          Don't have an account?{" "}
           <Link href="/sign-up" className="text-blue-600 dark:text-blue-500 hover:underline font-medium">
             Create Account
           </Link>
@@ -157,7 +157,7 @@ export function SignIn() {
           <Button
             onClick={handleGoogleLogin}
             variant="outline"
-            className="w-full h-10 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700"
+            className="w-full h-10 bg-white dark:bg-gray-800 text-gray-900 hover:text-black dark:text-white border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
             disabled={isLoadingGoogle || isLoadingCredentials || isLoadingGithub}
           >
             {isLoadingGoogle ? (
@@ -171,7 +171,7 @@ export function SignIn() {
           <Button
             onClick={handleGithubLogin}
             variant="outline"
-            className="w-full h-10 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700"
+            className="w-full h-10 bg-white dark:bg-gray-800 text-gray-900 hover:text-black dark:text-white border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
             disabled={isLoadingGithub || isLoadingCredentials || isLoadingGoogle}
           >
             {isLoadingGithub ? (

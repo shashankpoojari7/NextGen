@@ -71,7 +71,6 @@ const Notification: React.FC<NotificationProps> = ({ data }) => {
     setIsDragging(false);
   };
 
-  /** DO NOT UNMOUNT IMMEDIATELY */
   if (!data && stage === "hidden") return null;
 
   const isExpanded = stage === "expanded";
@@ -93,15 +92,14 @@ const Notification: React.FC<NotificationProps> = ({ data }) => {
       `}
       style={{
         top: isVisible
-          ? `${16 - touchOffset}px`    // ⭐ NOTIFICATION AT TOP
-          : "-80px",                  // Slide up when hidden
+          ? `${16 - touchOffset}px`
+          : "-80px",
         opacity: stage === "closing" ? 0 : 1,
       }}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      {/* Expanded Content */}
       <div
         className={`text-white text-sm px-4 flex-1 transition-opacity duration-300 ${
           isExpanded ? "opacity-100" : "opacity-0"
@@ -110,7 +108,6 @@ const Notification: React.FC<NotificationProps> = ({ data }) => {
         {data && NotificationLayouts(data)}
       </div>
 
-      {/* Close button */}
       {isExpanded && (
         <button
           onClick={handleClose}
@@ -124,7 +121,6 @@ const Notification: React.FC<NotificationProps> = ({ data }) => {
         </button>
       )}
 
-      {/* Small circle when collapsed */}
       {!isExpanded && (
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="w-3 h-3 bg-white rounded-full" />

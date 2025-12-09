@@ -83,27 +83,27 @@ export function PostActions({ postId, postUserId, initialLiked, initialLikes, on
         >
           <Heart
             className={cn(
-              "w-6 h-6 lg:w-7 lg:h-7 hover:text-gray-500 dark:text-gray-300 dark:hover:text-white transition",
+              "w-6 h-6 lg:w-7 lg:h-7 transition",
               liked
                 ? "fill-red-500 text-red-500 scale-110"
-                : "text-black hover:scale-105"
+                : "text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white hover:scale-105"
             )}
           />
         </button>
 
         {/* Comment */}
         <button onClick={onOpenComments}>
-          <MessageCircle className="w-6 h-6 lg:w-7 lg:h-7 text-black hover:text-gray-500 dark:text-gray-300 dark:hover:text-white transition" />
+          <MessageCircle className="w-6 h-6 lg:w-7 lg:h-7 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white transition" />
         </button>
 
         {/* Share */}
         <button>
-          <Send className="w-6 h-6 lg:w-7 lg:h-7 text-black hover:text-gray-500 dark:text-gray-300 dark:hover:text-white transition" />
+          <Send className="w-6 h-6 lg:w-7 lg:h-7 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white transition" />
         </button>
       </div>
 
       {/* Likes Count */}
-      <div className="w-full px-1 py-1 text-black dark:text-white  text-xs lg:text-[14px]">
+      <div className="w-full px-1 py-1 text-gray-900 dark:text-white text-xs lg:text-[14px]">
         <p className="font-semibold">
           {likes} {likes <= 1 ? "like" : "likes"}
         </p>

@@ -25,7 +25,7 @@ import { ApiResponse } from "@/lib/ApiResponse";
 export function FollowSection({ user }: { user: UserProfile }) {
   const [profile, setProfile] = useState<UserProfile>(user);
   const { data: session } = useSession();
-  const currentUserId = session?.user?._id;
+  const currentUserId = session?.user?.id;
 
   useEffect(() => {
     setProfile(user);
@@ -98,20 +98,20 @@ export function FollowSection({ user }: { user: UserProfile }) {
     return (
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <button className="w-full py-2 sm:py-2.5 text-sm sm:text-base font-semibold border border-[#25292f] bg-[#25292f] hover:border-transparent rounded-lg transition-colors active:bg-[#1a1d21]">
+          <button className="w-full py-2 sm:py-2.5 text-sm sm:text-base font-semibold border border-gray-300 bg-gray-200 hover:bg-gray-300 dark:border-[#25292f] dark:bg-[#25292f] dark:hover:border-transparent rounded-lg transition-colors active:bg-gray-400 dark:active:bg-[#1a1d21] text-gray-900 dark:text-white">
             Requested
           </button>
         </AlertDialogTrigger>
         <AlertDialogContent className="w-[90vw] max-w-[425px] bg-white dark:bg-neutral-900 text-black dark:text-white border border-gray-300 dark:border-neutral-700 rounded-lg shadow-lg mx-4">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-base sm:text-lg font-semibold text-white">
+            <AlertDialogTitle className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">
               Remove Follow Request
             </AlertDialogTitle>
             <AlertDialogDescription className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
               Once removed, your follow request will be canceled. You can always send it again later if you wish.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="flex-col sm:flex-row gap-2 sm:gap-0">
+          <AlertDialogFooter className="flex-col sm:flex-row gap-2 sm:gap-2">
             <AlertDialogCancel className="w-full sm:w-auto border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-md px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-800 m-0">
               Cancel
             </AlertDialogCancel>
@@ -131,7 +131,7 @@ export function FollowSection({ user }: { user: UserProfile }) {
     return (
       <button
         onClick={() => mutation.mutate({ action: "follow", id: profile._id })}
-        className="w-full py-2 sm:py-2.5 text-sm sm:text-base font-semibold bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors active:bg-blue-800"
+        className="w-full py-2 sm:py-2.5 text-sm sm:text-base font-semibold bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors active:bg-blue-800 text-white"
       >
         Follow back
       </button>
@@ -143,13 +143,13 @@ export function FollowSection({ user }: { user: UserProfile }) {
       <div className="flex w-full gap-2 sm:gap-3">
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <button className="flex-1 py-2 sm:py-2.5 text-sm sm:text-base font-semibold border border-gray-800 hover:bg-gray-800/70 hover:border-transparent rounded-xl transition-colors active:bg-gray-800">
+            <button className="flex-1 py-2 sm:py-2.5 text-sm sm:text-base font-semibold border border-gray-300 hover:bg-gray-200 dark:border-gray-800 dark:hover:bg-gray-800/70 hover:border-transparent rounded-xl transition-colors active:bg-gray-300 dark:active:bg-gray-800 text-gray-900 dark:text-white">
               Following
             </button>
           </AlertDialogTrigger>
-          <AlertDialogContent className="w-[90vw] sm:max-w-[500px] bg-[#1c1c1c] text-white border-none rounded-2xl shadow-xl">
+          <AlertDialogContent className="w-[90vw] sm:max-w-[500px] bg-white dark:bg-[#1c1c1c] text-gray-900 dark:text-white border border-gray-200 dark:border-none rounded-2xl shadow-xl">
             <AlertDialogHeader className="flex flex-col items-center justify-center space-y-2 py-3 sm:py-4">
-              <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full overflow-hidden border-2 border-gray-700">
+              <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full overflow-hidden border-2 border-gray-300 dark:border-gray-700">
                 <img
                   src={profile.profile_image || "/no-profile.jpg"}
                   alt={profile.username}
@@ -165,18 +165,18 @@ export function FollowSection({ user }: { user: UserProfile }) {
             <div className="flex flex-col overflow-hidden mt-2 gap-1">
               <button
                 onClick={() => mutation.mutate({ action: "unfollow", id: profile._id })}
-                className="w-full py-3 text-sm sm:text-base text-red-500 font-semibold text-center hover:bg-[#2a2a2a] transition-all active:bg-[#333333]"
+                className="w-full py-3 text-sm sm:text-base text-red-500 font-semibold text-center hover:bg-gray-100 dark:hover:bg-[#2a2a2a] transition-all active:bg-gray-200 dark:active:bg-[#333333]"
               >
                 Unfollow
               </button>
-              <AlertDialogCancel className="w-full py-3 text-sm sm:text-base text-gray-300 font-medium text-center hover:bg-[#2a2a2a] active:bg-[#333333] border-none transition-all m-0 rounded-none">
+              <AlertDialogCancel className="w-full py-3 text-sm sm:text-base text-gray-700 dark:text-gray-300 font-medium text-center hover:bg-gray-100 dark:hover:bg-[#2a2a2a] active:bg-gray-200 dark:active:bg-[#333333] border-none transition-all m-0 rounded-none">
                 Cancel
               </AlertDialogCancel>
             </div>
           </AlertDialogContent>
         </AlertDialog>
         <Link href={`/messages/${user._id}`} className="flex-1">
-          <button className="w-full py-2 sm:py-2.5 text-sm sm:text-base font-semibold border border-gray-800 hover:bg-gray-800/70 hover:border-transparent rounded-xl transition-colors active:bg-gray-800">
+          <button className="w-full py-2 sm:py-2.5 text-sm sm:text-base font-semibold border border-gray-300 hover:bg-gray-200 dark:border-gray-800 dark:hover:bg-gray-800/70 hover:border-transparent rounded-xl transition-colors active:bg-gray-300 dark:active:bg-gray-800 text-gray-900 dark:text-white">
             Message
           </button>
         </Link>
@@ -187,7 +187,7 @@ export function FollowSection({ user }: { user: UserProfile }) {
   return (
     <button
       onClick={() => mutation.mutate({ action: "follow", id: profile._id })}
-      className="w-full py-2 sm:py-2.5 text-sm sm:text-base font-semibold bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors active:bg-blue-800"
+      className="w-full py-2 sm:py-2.5 text-sm sm:text-base font-semibold bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors active:bg-blue-800 text-white"
     >
       Follow
     </button>

@@ -156,17 +156,18 @@ export default function SignUpForm() {
             name="identifier"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-gray-300">Email</FormLabel>
+                <FormLabel className="text-gray-700 dark:text-gray-300">Email</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Email"
                     className="
-                      bg-gray-800 text-gray-100
-                      border border-gray-700
+                      bg-gray-50 dark:bg-gray-800 
+                      text-gray-900 dark:text-gray-100
+                      border border-gray-300 dark:border-gray-700
                       rounded-xl h-12 px-4
-                      placeholder:text-gray-400
+                      placeholder:text-gray-400 dark:placeholder:text-gray-400
                       focus:outline-none
-                      focus:ring-2 focus:ring-blue-600
+                      focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600
                       transition-all duration-200
                     "
                     disabled={isFormSubmitting}
@@ -184,19 +185,20 @@ export default function SignUpForm() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-gray-300">Password</FormLabel>
+                <FormLabel className="text-gray-700 dark:text-gray-300">Password</FormLabel>
                 <div className="relative">
                   <FormControl>
                     <Input
                       type={togglePassword ? "text" : "password"}
                       placeholder="Password"
                       className="
-                        bg-gray-800 text-gray-100
-                        border border-gray-700
+                        bg-gray-50 dark:bg-gray-800 
+                        text-gray-900 dark:text-gray-100
+                        border border-gray-300 dark:border-gray-700
                         rounded-xl h-12 px-4 pr-12
-                        placeholder:text-gray-400
+                        placeholder:text-gray-400 dark:placeholder:text-gray-400
                         focus:outline-none
-                        focus:ring-2 focus:ring-blue-600
+                        focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600
                         transition-all duration-200
                       "
                       disabled={isFormSubmitting}
@@ -206,7 +208,7 @@ export default function SignUpForm() {
 
                   <div
                     onClick={() => setTogglePassword(!togglePassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400 hover:text-gray-200"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
                   >
                     {togglePassword ? <Eye size={20} /> : <EyeOff size={20} />}
                   </div>
@@ -223,18 +225,19 @@ export default function SignUpForm() {
             name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-gray-300">Username</FormLabel>
+                <FormLabel className="text-gray-700 dark:text-gray-300">Username</FormLabel>
                 <div className="relative">
                   <FormControl>
                     <Input
                       placeholder="Username"
                       className="
-                        bg-gray-800 text-gray-100
-                        border border-gray-700
+                        bg-gray-50 dark:bg-gray-800 
+                        text-gray-900 dark:text-gray-100
+                        border border-gray-300 dark:border-gray-700
                         rounded-xl h-12 px-4 pr-12
-                        placeholder:text-gray-400
+                        placeholder:text-gray-400 dark:placeholder:text-gray-400
                         focus:outline-none
-                        focus:ring-2 focus:ring-blue-600
+                        focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600
                         transition-all duration-200
                       "
                       {...field}
@@ -278,17 +281,18 @@ export default function SignUpForm() {
             name="fullname"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-gray-300">Full Name</FormLabel>
+                <FormLabel className="text-gray-700 dark:text-gray-300">Full Name</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Full Name"
                     className="
-                      bg-gray-800 text-gray-100
-                      border border-gray-700
+                      bg-gray-50 dark:bg-gray-800 
+                      text-gray-900 dark:text-gray-100
+                      border border-gray-300 dark:border-gray-700
                       rounded-xl h-12 px-4
-                      placeholder:text-gray-400
+                      placeholder:text-gray-400 dark:placeholder:text-gray-400
                       focus:outline-none
-                      focus:ring-2 focus:ring-blue-600
+                      focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600
                       transition-all duration-200
                     "
                     {...field}
@@ -306,17 +310,18 @@ export default function SignUpForm() {
             name="dob"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-gray-300">Date of Birth</FormLabel>
+                <FormLabel className="text-gray-700 dark:text-gray-300">Date of Birth</FormLabel>
                 <FormControl>
                   <Input
                     type="date"
                     className="
-                      bg-gray-800 text-gray-100
-                      border border-gray-700
+                      bg-gray-50 dark:bg-gray-800 
+                      text-gray-900 dark:text-gray-100
+                      border border-gray-300 dark:border-gray-700
                       rounded-xl h-12 px-4
-                      placeholder:text-gray-400
+                      placeholder:text-gray-400 dark:placeholder:text-gray-400
                       focus:outline-none
-                      focus:ring-2 focus:ring-blue-600
+                      focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600
                       transition-all duration-200
                     "
                     {...field}
@@ -331,7 +336,7 @@ export default function SignUpForm() {
           {/* SUBMIT */}
           <Button 
             type="submit" 
-            className="w-full h-10 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 transition-colors"
+            className="w-full h-10 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 transition-colors text-white"
             disabled={isFormSubmitting || isCheckingUsername || !uniqueUsername} // Disable if checking or not unique
           >
             {isFormSubmitting ? (

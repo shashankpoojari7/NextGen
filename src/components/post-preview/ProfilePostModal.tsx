@@ -29,7 +29,7 @@ export default function ProfilePostModal({posts, initialIndex, onClose }: Profil
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80  flex items-center justify-center z-500"
+    <div className="fixed inset-0 bg-black/80 dark:bg-black/80 bg-white/95 backdrop-blur-sm flex items-center justify-center z-500"
       onClick={onClose}
     >
       <div className="relative flex justify-center items-center w-full h-full"
@@ -41,7 +41,7 @@ export default function ProfilePostModal({posts, initialIndex, onClose }: Profil
             onClick={goPrev}
             className="
               absolute left-2 sm:left-5 top-1/2 -translate-y-1/2 
-              z-600 bg-white text-black shadow-xl
+              z-600 bg-white dark:bg-white text-black shadow-xl
               w-6 h-6 sm:w-10 sm:h-10 rounded-full flex items-center justify-center
               hover:scale-110 transition
             "
@@ -55,7 +55,7 @@ export default function ProfilePostModal({posts, initialIndex, onClose }: Profil
             onClick={goNext}
             className="
               absolute right-2 sm:right-5 top-1/2 -translate-y-1/2 
-              z-600 bg-white text-black shadow-xl
+              z-600 bg-white dark:bg-white text-black shadow-xl
               w-6 h-6 sm:w-10 sm:h-10 rounded-full flex items-center justify-center
               hover:scale-110 transition
             "

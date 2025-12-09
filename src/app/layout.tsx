@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { MainWrapper } from "@/app/MainWrapper";
-import SplashScreen from "@/components/SplashScreen";
+import ThemeInit from "@/components/Theme-init";
 
 export const metadata: Metadata = {
   title: "NextGen",
@@ -14,6 +14,7 @@ export default function RootLayout({ children }: Readonly<{children: React.React
   return (
     <html lang="en" className="dark">
         <body className="font-sans antialiased">
+          <ThemeInit/>
           <MainWrapper>
             {children}
           </MainWrapper>

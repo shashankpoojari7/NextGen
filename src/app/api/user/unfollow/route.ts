@@ -3,6 +3,7 @@ import { ApiResponse } from "@/lib/ApiResponse";
 import dbConnect from "@/database/dbConnection";
 import Follow from "@/models/follow.model";
 import { safeObjectId } from "@/helpers/ValidateMongooseId";
+import Notification from "@/models/notification.model";
 
 export async function POST(request: NextRequest) {
   try {
@@ -34,6 +35,12 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+
+    await Notification.deleteOne({
+      recipient: validFollowingUserId,
+      actor: validUserId,
+      type: "FOLLOW"
+    });
 
     return NextResponse.json(
       new ApiResponse(200, "Unfollowed successfully."),

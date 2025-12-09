@@ -164,17 +164,17 @@ export default function EditProfileDialog({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="w-full py-2 sm:py-2.5 text-sm sm:text-base font-semibold border border-gray-800 bg-gray-800/70 hover:bg-gray-700 rounded-xl transition-colors active:bg-gray-600">
+        <Button className="w-full py-2 sm:py-2.5 text-sm sm:text-base font-semibold border border-gray-300 dark:border-gray-800 bg-gray-100 dark:bg-gray-800/70 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-white rounded-xl transition-colors active:bg-gray-300 dark:active:bg-gray-600">
           Edit Profile
         </Button>
       </DialogTrigger>
 
       <DialogContent 
       onOpenAutoFocus={(e) => e.preventDefault()}
-      className="w-[95vw] sm:w-full sm:max-w-[500px] max-h-[90vh] overflow-y-auto bg-[#1c1c1c] text-white border border-gray-800 rounded-2xl shadow-xl p-0 gap-0">
+      className="w-[95vw] sm:w-full sm:max-w-[500px] max-h-[90vh] overflow-y-auto bg-white dark:bg-[#1c1c1c] text-gray-900 dark:text-white border border-gray-300 dark:border-gray-800 rounded-2xl shadow-xl p-0 gap-0">
         {/* Header */}
-        <DialogHeader className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-800 sticky top-0 bg-[#1c1c1c] z-10">
-          <DialogTitle className="text-lg sm:text-xl font-semibold">
+        <DialogHeader className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-300 dark:border-gray-800 sticky top-0 bg-white dark:bg-[#1c1c1c] z-10">
+          <DialogTitle className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
             Edit Profile
           </DialogTitle>
         </DialogHeader>
@@ -183,7 +183,7 @@ export default function EditProfileDialog({
         <div className="px-4 sm:px-6 py-4 sm:py-6">
           {/* Profile Image */}
           <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-5 sm:mb-6">
-            <div className="relative h-20 w-20 sm:h-24 sm:w-24 rounded-full overflow-hidden border border-gray-800 shrink-0">
+            <div className="relative h-20 w-20 sm:h-24 sm:w-24 rounded-full overflow-hidden border border-gray-300 dark:border-gray-800 shrink-0">
               <img
                 src={imagePreview || profileImage || "/no-profile.jpg"}
                 alt="Profile"
@@ -191,8 +191,8 @@ export default function EditProfileDialog({
               />
             </div>
             <div className="flex-1 text-center sm:text-left">
-              <h3 className="font-semibold text-white mb-1 text-sm sm:text-base">{initialUsername}</h3>
-              <label className="inline-flex items-center gap-2 text-xs sm:text-sm text-blue-500 hover:text-blue-400 cursor-pointer font-medium">
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-1 text-sm sm:text-base">{initialUsername}</h3>
+              <label className="inline-flex items-center gap-2 text-xs sm:text-sm text-blue-500 dark:text-blue-500 hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer font-medium">
                 <Camera size={14} className="sm:w-4 sm:h-4" />
                 Change profile photo
                 <input
@@ -214,7 +214,7 @@ export default function EditProfileDialog({
                 name="username"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-xs sm:text-sm font-medium text-gray-300">
+                    <FormLabel className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
                       Username
                     </FormLabel>
                     <div className="relative">
@@ -223,7 +223,7 @@ export default function EditProfileDialog({
                           type="text"
                           placeholder="Username"
                           spellCheck={false}
-                          className="bg-neutral-900 border border-neutral-800 text-white text-sm sm:text-base focus:border-gray-700 focus:ring-0 rounded-lg h-10 sm:h-11 pr-10"
+                          className="bg-gray-50 dark:bg-neutral-900 border border-gray-300 dark:border-neutral-800 text-gray-900 dark:text-white text-sm sm:text-base focus:border-gray-400 dark:focus:border-gray-700 focus:ring-0 rounded-lg h-10 sm:h-11 pr-10"
                           {...field}
                           onFocus={() => setUsernameMsg(true)}
                           onBlur={() => setUsernameMsg(false)}
@@ -234,7 +234,7 @@ export default function EditProfileDialog({
                       <div className="absolute right-3 top-1/2 -translate-y-1/2">
                         {isCheckingUsername ? (
                           <Loader2
-                            className="animate-spin text-gray-400"
+                            className="animate-spin text-gray-400 dark:text-gray-400"
                             size={16}
                           />
                         ) : (
@@ -242,11 +242,11 @@ export default function EditProfileDialog({
                             <>
                               {uniqueUsername ? (
                                 <CircleCheck
-                                  className="text-green-500"
+                                  className="text-green-500 dark:text-green-500"
                                   size={16}
                                 />
                               ) : (
-                                <CircleX className="text-red-500" size={16} />
+                                <CircleX className="text-red-500 dark:text-red-500" size={16} />
                               )}
                             </>
                           )
@@ -258,7 +258,7 @@ export default function EditProfileDialog({
                     {userMessage && usernameMsg && (
                       <p
                         className={`text-xs sm:text-sm mt-1 ${
-                          uniqueUsername ? "text-green-500" : "text-red-500"
+                          uniqueUsername ? "text-green-500 dark:text-green-500" : "text-red-500 dark:text-red-500"
                         }`}
                       >
                         {userMessage}
@@ -275,7 +275,7 @@ export default function EditProfileDialog({
                 name="fullname"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-xs sm:text-sm font-medium text-gray-300">
+                    <FormLabel className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
                       Full Name
                     </FormLabel>
                     <FormControl>
@@ -283,7 +283,7 @@ export default function EditProfileDialog({
                         type="text"
                         placeholder="Full Name"
                         spellCheck={false}
-                        className="bg-neutral-900 border border-neutral-800 text-white text-sm sm:text-base focus:border-gray-700 focus:ring-0 rounded-lg h-10 sm:h-11"
+                        className="bg-gray-50 dark:bg-neutral-900 border border-gray-300 dark:border-neutral-800 text-gray-900 dark:text-white text-sm sm:text-base focus:border-gray-400 dark:focus:border-gray-700 focus:ring-0 rounded-lg h-10 sm:h-11"
                         {...field}
                       />
                     </FormControl>
@@ -298,20 +298,20 @@ export default function EditProfileDialog({
                 name="bio"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-xs sm:text-sm font-medium text-gray-300">
+                    <FormLabel className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
                       Bio
                     </FormLabel>
                     <FormControl>
                       <Textarea
                         rows={3}
                         placeholder="Write something about yourself..."
-                        className="bg-neutral-900 border border-neutral-800 text-white text-sm sm:text-base focus:border-gray-700 focus:ring-0 rounded-lg resize-none"
+                        className="bg-gray-50 dark:bg-neutral-900 border border-gray-300 dark:border-neutral-800 text-gray-900 dark:text-white text-sm sm:text-base focus:border-gray-400 dark:focus:border-gray-700 focus:ring-0 rounded-lg resize-none"
                         {...field}
                       />
                     </FormControl>
                     <div className="flex justify-between items-center mt-1">
                       <FormMessage className="text-xs sm:text-sm" />
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-gray-500 dark:text-gray-500">
                         {watchedBio?.length || 0}/150
                       </span>
                     </div>
@@ -325,7 +325,7 @@ export default function EditProfileDialog({
                   type="button"
                   onClick={() => setIsOpen(false)}
                   variant="ghost"
-                  className="w-full flex-1 bg-transparent hover:bg-gray-800 text-white text-sm sm:text-base border border-gray-800 rounded-lg h-10 sm:h-11 order-2 sm:order-1"
+                  className="w-full flex-1 bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-900 dark:text-white text-sm sm:text-base border border-gray-300 dark:border-gray-800 rounded-lg h-10 sm:h-11 order-2 sm:order-1"
                 >
                   Cancel
                 </Button>

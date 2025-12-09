@@ -79,7 +79,7 @@ export default function NotificationPage() {
   if (isLoading)
     return (
       <div className="flex items-center justify-center py-6">
-        <Loader className="w-7 h-7 animate-spin text-gray-400" />
+        <Loader className="w-7 h-7 animate-spin text-gray-400 dark:text-gray-400" />
       </div>
     );
 
@@ -92,20 +92,21 @@ export default function NotificationPage() {
   const thisMonth = notifications.filter((n) => !isWithinDays(n.createdAt, 7));
 
     return (
-    <div className="w-full max-w-2xl mx-auto bg-black text-white min-h-screen pb-20">
+    <div className="w-full max-w-2xl mx-auto bg-white dark:bg-black text-gray-900 dark:text-white min-h-screen pb-20">
       <div className="flex items-center justify-between text-[20px] font-bold px-4 py-4">
         <p className="p-0.5">Notifications</p>
         <X
           onClick={() => {
             router.back()
           }}
+          className="cursor-pointer"
         />
       </div>
 
       <FollowRequestBanner notifications={notifications} />
 
       {thisWeek.length > 0 && (
-        <div className="border-b border-gray-800">
+        <div className="border-b border-gray-200 dark:border-gray-800">
           <SectionHeader title="This week" />
           {thisWeek.map((n) => (
             <NotificationRow key={n._id} item={n} mutation={mutation} />
@@ -114,7 +115,7 @@ export default function NotificationPage() {
       )}
 
       {thisMonth.length > 0 && (
-        <div className="border-b border-gray-800">
+        <div className="border-b border-gray-200 dark:border-gray-800">
           <SectionHeader title="This month" />
           {thisMonth.map((n) => (
             <NotificationRow key={n._id} item={n} mutation={mutation} />
@@ -137,9 +138,9 @@ function FollowRequestBanner({ notifications }: { notifications: NotificationIte
 
   return (
     <Link href={"/notification/follow-requests"}>
-      <div className="flex items-center justify-between px-4 py-4 border-b border-gray-800 hover:bg-gray-900/30 transition cursor-pointer">
+      <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-900/30 transition cursor-pointer">
         <div className="flex items-center gap-3">
-          <div className="h-11 w-11 rounded-full overflow-hidden bg-gray-800">
+          <div className="h-11 w-11 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-800">
             <img
               src={requests[0].senderImage || "/no-profile.jpg"}
               alt="request"
@@ -149,7 +150,7 @@ function FollowRequestBanner({ notifications }: { notifications: NotificationIte
 
           <div className="flex flex-col">
             <span className="font-semibold">Follow requests</span>
-            <span className="text-sm text-gray-400">
+            <span className="text-sm text-gray-500 dark:text-gray-400">
               {requests[0].senderUsername} + {requests.length - 1} others
             </span>
           </div>
@@ -166,7 +167,7 @@ function FollowRequestBanner({ notifications }: { notifications: NotificationIte
 function SectionHeader({ title }: { title: string }) {
   return (
     <div className="px-4 py-3">
-      <h3 className="text-base font-bold text-white">{title}</h3>
+      <h3 className="text-base font-bold text-gray-900 dark:text-white">{title}</h3>
     </div>
   );
 }
@@ -179,10 +180,10 @@ function isWithinDays(date: string, days: number) {
 function NotificationRow({ item, mutation }: { item: NotificationItem; mutation: any;}) 
 {
   return (
-    <div className="flex items-center justify-between px-4 py-3 hover:bg-gray-900/30 transition">
+    <div className="flex items-center justify-between px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-900/30 transition">
       <div className="flex items-center gap-3 flex-1 min-w-0">
         <Link href={`/profile/${item.senderUsername}`}>
-          <div className="h-11 w-11 rounded-full overflow-hidden bg-gray-800 shrink-0">
+          <div className="h-11 w-11 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-800 shrink-0">
             <img
               src={item.senderImage || "/no-profile.jpg"}
               alt="profile"
@@ -211,29 +212,29 @@ function NotificationText({ item }: { item: NotificationItem }) {
 
   if (item.type === "LIKE")
     return (
-      <span className="text-sm text-gray-200">
-        {username} <span className="text-gray-300">liked your post.</span>
+      <span className="text-sm text-gray-700 dark:text-gray-200">
+        {username} <span className="text-gray-600 dark:text-gray-300">liked your post.</span>
       </span>
     );
 
   if (item.type === "COMMENT")
     return (
-      <span className="text-sm text-gray-200">
-        {username} <span className="text-gray-300">commented on your post.</span>
+      <span className="text-sm text-gray-700 dark:text-gray-200">
+        {username} <span className="text-gray-600 dark:text-gray-300">commented on your post.</span>
       </span>
     );
 
   if (item.type === "FOLLOW")
     return (
-      <span className="text-sm text-gray-200">
-        {username} <span className="text-gray-300">started following you.</span>
+      <span className="text-sm text-gray-700 dark:text-gray-200">
+        {username} <span className="text-gray-600 dark:text-gray-300">started following you.</span>
       </span>
     );
 
   if (item.type === "FOLLOW_REQUEST")
     return (
-      <span className="text-sm text-gray-200">
-        {username} <span className="text-gray-300">requested to follow you.</span>
+      <span className="text-sm text-gray-700 dark:text-gray-200">
+        {username} <span className="text-gray-600 dark:text-gray-300">requested to follow you.</span>
       </span>
     );
 
@@ -244,7 +245,7 @@ function RightAction({ item, mutation }: { item: NotificationItem; mutation: any
   if (item.type === "LIKE" || item.type === "COMMENT") {
     return (
       item.postPreview && (
-        <div className="h-11 w-11 rounded overflow-hidden bg-gray-800 ml-3">
+        <div className="h-11 w-11 rounded overflow-hidden bg-gray-200 dark:bg-gray-800 ml-3">
           <img src={item.postPreview} className="w-full h-full object-cover" />
         </div>
       )
@@ -267,7 +268,7 @@ function RightAction({ item, mutation }: { item: NotificationItem; mutation: any
 
         <button
           onClick={() => mutation.mutate({ action: "delete", id: item.followRequestId })}
-          className="px-4 py-1.5 bg-[#2b2b2b] hover:bg-[#3b3b3b] text-white text-sm font-medium rounded-md"
+          className="px-4 py-1.5 bg-gray-200 hover:bg-gray-300 dark:bg-[#2b2b2b] dark:hover:bg-[#3b3b3b] text-gray-900 dark:text-white text-sm font-medium rounded-md"
         >
           Delete
         </button>

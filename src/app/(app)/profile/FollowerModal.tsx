@@ -158,7 +158,7 @@ export default function FollowersModal({ closeModel, userId }: FollowersModalPro
         return (
           <button
             disabled
-            className="flex items-center justify-center w-[110px] px-4 py-1.5 bg-gray-700 rounded-lg text-sm font-semibold"
+            className="flex items-center justify-center w-[110px] px-4 py-1.5 bg-gray-300 dark:bg-gray-700 rounded-lg text-sm font-semibold text-gray-900 dark:text-white"
           >
             <Loader2 className="w-4 h-4 animate-spin" />
           </button>
@@ -168,18 +168,18 @@ export default function FollowersModal({ closeModel, userId }: FollowersModalPro
       return (
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <button className="flex items-center justify-center space-x-1 w-[110px] px-4 py-1.5 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-semibold transition">
+            <button className="flex items-center justify-center space-x-1 w-[110px] px-4 py-1.5 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg text-sm font-semibold transition">
               <UserX className="w-4 h-4" />
               <span>Remove</span>
             </button>
           </AlertDialogTrigger>
-          <AlertDialogContent className="bg-white dark:bg-neutral-900 text-black dark:text-white border border-gray-300 dark:border-neutral-700 rounded-lg shadow-lg">
+          <AlertDialogContent className="bg-white dark:bg-neutral-900 text-gray-900 dark:text-white border border-gray-300 dark:border-neutral-700 rounded-lg shadow-lg">
             <AlertDialogHeader>
-              <AlertDialogTitle className="text-lg font-semibold text-white">
+              <AlertDialogTitle className="text-lg font-semibold text-gray-900 dark:text-white">
                 Remove Follower
               </AlertDialogTitle>
               <AlertDialogDescription className="text-sm text-gray-600 dark:text-gray-400">
-                Are you sure you want to remove <span className="font-bold text-gray-200">{user.username}</span> from your followers? They won't be notified.
+                Are you sure you want to remove <span className="font-bold text-gray-900 dark:text-gray-200">{user.username}</span> from your followers? They won't be notified.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -200,7 +200,7 @@ export default function FollowersModal({ closeModel, userId }: FollowersModalPro
 
     if (session?.user?.id && user._id === session.user.id) {
       return(
-      <button className="flex items-center justify-center space-x-1 w-[110px] px-4 py-1.5 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-semibold transition">
+      <button className="flex items-center justify-center space-x-1 w-[110px] px-4 py-1.5 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg text-sm font-semibold transition">
         <User className="w-4 h-4" />
         <span>You</span>
       </button>
@@ -211,7 +211,7 @@ export default function FollowersModal({ closeModel, userId }: FollowersModalPro
       return (
         <button
           disabled
-          className="flex items-center justify-center w-[110px] px-4 py-1.5 bg-gray-700 rounded-lg text-sm font-semibold"
+          className="flex items-center justify-center w-[110px] px-4 py-1.5 bg-gray-300 dark:bg-gray-700 rounded-lg text-sm font-semibold text-gray-900 dark:text-white"
         >
           <Loader2 className="w-4 h-4 animate-spin" />
         </button>
@@ -222,34 +222,34 @@ export default function FollowersModal({ closeModel, userId }: FollowersModalPro
       return (
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <button className="flex items-center justify-center space-x-1 w-[110px] px-4 py-1.5 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-semibold transition">
+            <button className="flex items-center justify-center space-x-1 w-[110px] px-4 py-1.5 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg text-sm font-semibold transition">
               <UserCheck className="w-4 h-4" />
               <span>Following</span>
             </button>
           </AlertDialogTrigger>
-          <AlertDialogContent className="sm:max-w-[400px] bg-[#1c1c1c] text-white border-none rounded-2xl shadow-xl">
+          <AlertDialogContent className="sm:max-w-[400px] bg-white dark:bg-[#1c1c1c] text-gray-900 dark:text-white border border-gray-300 dark:border-none rounded-2xl shadow-xl">
             <AlertDialogHeader className="flex flex-col items-center justify-center space-y-2 py-4">
-              <div className="h-20 w-20 rounded-full overflow-hidden border-2 border-gray-700">
+              <div className="h-20 w-20 rounded-full overflow-hidden border-2 border-gray-300 dark:border-gray-700">
                 <img
                   src={user.profile_image || "/no-profile.jpg"}
                   alt={user.username}
                   className="object-cover w-full h-full"
                 />
               </div>
-              <AlertDialogTitle className="text-lg font-semibold text-center mt-2">
+              <AlertDialogTitle className="text-lg font-semibold text-center mt-2 text-gray-900 dark:text-white">
                 @{user.username}
               </AlertDialogTitle>
             </AlertDialogHeader>
-            <div className="flex flex-col overflow-hidden mt-2 border-gray-700">
+            <div className="flex flex-col overflow-hidden mt-2 border-t border-gray-300 dark:border-gray-700">
               <button
                 onClick={() => {
                   handleUnfollow(user._id);
                 }}
-                className="w-full py-3 text-red-500 font-semibold text-center hover:bg-[#2a2a2a] transition-all border-gray-700"
+                className="w-full py-3 text-red-500 dark:text-red-500 font-semibold text-center hover:bg-gray-100 dark:hover:bg-[#2a2a2a] transition-all border-b border-gray-300 dark:border-gray-700"
               >
                 Unfollow
               </button>
-              <AlertDialogCancel className="w-full py-3 text-gray-300 font-medium text-center hover:bg-[#2a2a2a] border-none transition-all m-0 rounded-none">
+              <AlertDialogCancel className="w-full py-3 text-gray-700 dark:text-gray-300 font-medium text-center hover:bg-gray-100 dark:hover:bg-[#2a2a2a] border-none transition-all m-0 rounded-none">
                 Cancel
               </AlertDialogCancel>
             </div>
@@ -263,14 +263,14 @@ export default function FollowersModal({ closeModel, userId }: FollowersModalPro
       return (
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <button className="flex items-center justify-center space-x-1 w-[110px] px-4 py-1.5 bg-gray-700 rounded-lg text-sm font-semibold opacity-70">
+            <button className="flex items-center justify-center space-x-1 w-[110px] px-4 py-1.5 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg text-sm font-semibold opacity-70">
               <Clock className="w-4 h-4" />
               <span>Requested</span>
             </button>
           </AlertDialogTrigger>
-          <AlertDialogContent className="bg-white dark:bg-neutral-900 text-black dark:text-white border border-gray-300 dark:border-neutral-700 rounded-lg shadow-lg">
+          <AlertDialogContent className="bg-white dark:bg-neutral-900 text-gray-900 dark:text-white border border-gray-300 dark:border-neutral-700 rounded-lg shadow-lg">
             <AlertDialogHeader>
-              <AlertDialogTitle className="text-lg font-semibold text-white">
+              <AlertDialogTitle className="text-lg font-semibold text-gray-900 dark:text-white">
                 Remove Follow Request
               </AlertDialogTitle>
               <AlertDialogDescription className="text-sm text-gray-600 dark:text-gray-400">
@@ -298,7 +298,7 @@ export default function FollowersModal({ closeModel, userId }: FollowersModalPro
       return (
         <button
           onClick={() => handleFollow(user._id, user.isPrivate || false)}
-          className="flex items-center justify-center space-x-1 w-[110px] px-1 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-[12px] font-semibold transition"
+          className="flex items-center justify-center space-x-1 w-[110px] px-1 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-[12px] font-semibold transition"
         >
           <UserPlus className="w-4 h-4" />
           <span className="">Follow Back</span>
@@ -309,7 +309,7 @@ export default function FollowersModal({ closeModel, userId }: FollowersModalPro
     return (
       <button
         onClick={() => handleFollow(user._id, user.isPrivate || false)}
-        className="flex items-center justify-center space-x-1 w-[110px] px-4 py-1.5 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm font-semibold transition"
+        className="flex items-center justify-center space-x-1 w-[110px] px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-semibold transition"
       >
         <UserPlus className="w-4 h-4" />
         <span>Follow</span>
@@ -320,15 +320,15 @@ export default function FollowersModal({ closeModel, userId }: FollowersModalPro
   return (
     <Dialog open={true} onOpenChange={() => closeModel(false)}>
       <DialogContent
-        className="sm:max-w-[600px] bg-[#262626] text-white border-none rounded-2xl p-0 overflow-hidden max-h-[80vh]"
+        className="sm:max-w-[600px] bg-white dark:bg-[#262626] text-gray-900 dark:text-white border border-gray-300 dark:border-none rounded-2xl p-0 overflow-hidden max-h-[80vh]"
         showCloseButton={false}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-700">
-          <DialogTitle className="text-lg font-semibold">Followers</DialogTitle>
+        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-300 dark:border-gray-700">
+          <DialogTitle className="text-lg font-semibold text-gray-900 dark:text-white">Followers</DialogTitle>
           <button
             onClick={() => closeModel(false)}
-            className="text-gray-400 hover:text-white transition"
+            className="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition"
           >
             <X className="w-6 h-6" />
           </button>
@@ -337,18 +337,18 @@ export default function FollowersModal({ closeModel, userId }: FollowersModalPro
         {/* Search Bar */}
         <div className="px-4 py-2">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-400" />
             <input
               type="text"
               placeholder="Search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-[#3a3a3a] border border-gray-600 rounded-lg text-sm text-white placeholder-gray-400 focus:outline-none focus:border-cyan-500 transition"
+              className="w-full pl-10 pr-4 py-2 bg-gray-100 dark:bg-[#3a3a3a] border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400 focus:outline-none focus:border-cyan-500 dark:focus:border-cyan-500 transition"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -360,34 +360,34 @@ export default function FollowersModal({ closeModel, userId }: FollowersModalPro
         <div className="overflow-y-auto max-h-[calc(80vh-140px)]">
           {isLoading ? (
             <div className="flex justify-center items-center py-10">
-              <Loader2 className="w-8 h-8 animate-spin text-cyan-400" />
+              <Loader2 className="w-8 h-8 animate-spin text-cyan-500 dark:text-cyan-400" />
             </div>
           ) : error ? (
             <div className="flex flex-col items-center justify-center py-10 px-4">
-              <p className="text-red-500 text-center">{error}</p>
+              <p className="text-red-500 dark:text-red-500 text-center">{error}</p>
               <button
                 onClick={() => window.location.reload()}
-                className="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm font-semibold transition"
+                className="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-semibold transition"
               >
                 Retry
               </button>
             </div>
           ) : filteredFollowers.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-10 px-4">
-              <p className="text-gray-400 text-center">
+              <p className="text-gray-500 dark:text-gray-400 text-center">
                 {searchQuery ? "No users found" : "No followers yet"}
               </p>
             </div>
           ) : (
-            <div className="divide-y divide-gray-700">
+            <div className="divide-y divide-gray-200 dark:divide-gray-700">
               {filteredFollowers.map((user) => (
                 <div
                   key={user._id}
-                  className="flex items-center justify-between px-4 py-3 hover:bg-[#2a2a2a] transition"
+                  className="flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-[#2a2a2a] transition"
                 >
                   {/* User Info */}
                   <div className="flex items-center space-x-3 flex-1 min-w-0 mr-3">
-                    <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-cyan-700 shrink-0">
+                    <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-cyan-600 dark:border-cyan-700 shrink-0">
                       <img
                         src={user.profile_image || "/no-profile.jpg"}
                         alt={user.username}
@@ -395,7 +395,7 @@ export default function FollowersModal({ closeModel, userId }: FollowersModalPro
                       />
                     </div>
                     <div className="flex flex-col min-w-0">
-                      <span className="font-semibold text-sm truncate">
+                      <span className="font-semibold text-sm truncate text-gray-900 dark:text-white">
                         <Link href={`/profile/${user.username}`}>
                           @{user.username}
                         </Link>

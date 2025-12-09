@@ -15,7 +15,7 @@ export interface UserType extends Document {
   dob: Date;
   bio?: string;
   profile_image?: string;
-  isPrivate?: boolean;
+  isPrivate: boolean;
   followersCount: number;
   followingCount: number;
   createdAt?: Date;
@@ -73,6 +73,7 @@ const userSchema: Schema<UserType> = new Schema(
     isPrivate: {
       type: Boolean,
       default: true,
+      required: true
     },
     followersCount: {
       type: Number,

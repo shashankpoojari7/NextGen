@@ -12,7 +12,7 @@ export function ProfilePost({ userId }: { userId: string; }) {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center py-8 sm:py-10 text-gray-400">
+      <div className="flex justify-center items-center py-8 sm:py-10 text-gray-500 dark:text-gray-400">
         <p className="text-sm sm:text-base">Loading posts...</p>
       </div>
     );
@@ -20,7 +20,7 @@ export function ProfilePost({ userId }: { userId: string; }) {
 
   if (isError || !posts) {
     return (
-      <div className="flex justify-center items-center py-8 sm:py-10 text-red-400">
+      <div className="flex justify-center items-center py-8 sm:py-10 text-red-500 dark:text-red-400">
         <p className="text-sm sm:text-base text-center px-4">
           {error instanceof Error ? error.message : "Failed to load posts."}
         </p>
@@ -32,11 +32,11 @@ export function ProfilePost({ userId }: { userId: string; }) {
   return (
     <div>
       {typedPosts.length > 0 ? (
-        <div className="grid grid-cols-3 gap-0.5 sm:gap-1 bg-black rounded-sm overflow-hidden">
+        <div className="grid grid-cols-3 gap-0.5 sm:gap-1 rounded-sm overflow-hidden">
           {typedPosts.map((p, index) => (
             <div
               key={p._id}
-              className="relative overflow-hidden bg-black cursor-pointer group"
+              className="relative overflow-hidden bg-gray-100 dark:bg-black cursor-pointer group"
               style={{ aspectRatio: "3 / 4" }}
               onClick={() => setOpenIndex(index)}
             >
@@ -61,7 +61,7 @@ export function ProfilePost({ userId }: { userId: string; }) {
               </div>
 
               {/* Stats overlay - Mobile (always visible) */}
-              <div className="absolute inset-0 flex md:hidden items-end justify-center bg-linear-to-t from-black/60 via-transparent to-transparent pointer-events-none">
+              <div className="absolute inset-0 flex md:hidden items-end justify-center bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none">
                 <div className="flex justify-center items-center gap-3 sm:gap-4 w-full text-white text-[10px] sm:text-xs font-semibold pb-2 sm:pb-3">
                   <div className="flex items-center gap-1">
                     <Heart className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> 
@@ -77,8 +77,8 @@ export function ProfilePost({ userId }: { userId: string; }) {
           ))}
         </div>
       ) : (
-        <div className="flex flex-col justify-center items-center py-16 sm:py-20 text-gray-400">
-          <Camera className="w-8 h-8 sm:w-10 sm:h-10 mb-2 sm:mb-3 text-gray-600" />
+        <div className="flex flex-col justify-center items-center py-16 sm:py-20 text-gray-500 dark:text-gray-400">
+          <Camera className="w-8 h-8 sm:w-10 sm:h-10 mb-2 sm:mb-3 text-gray-400 dark:text-gray-600" />
           <p className="text-sm sm:text-base">No posts yet</p>
         </div>
       )}

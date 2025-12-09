@@ -71,22 +71,22 @@ function SearchPage() {
       </div>
 
       {/* Search Input */}
-      <div className="flex border border-gray-400 dark:border-gray-700 rounded-lg px-4 py-2 mb-4 dark:bg-black mx-3 items-center">
+      <div className="flex border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 mb-4 bg-white dark:bg-black mx-3 items-center">
         <input
           type="text"
           autoFocus
           value={inputValue}
           placeholder="Search..."
-          className="w-full bg-transparent text-gray-700 dark:text-gray-200 text-sm focus:outline-none"
+          className="w-full bg-transparent text-gray-900 dark:text-gray-200 text-sm focus:outline-none placeholder-gray-500 dark:placeholder-gray-500"
           onChange={(e) => setInputValue(e.target.value)}
         />
 
         {loading ? (
-          <Loader className="animate-spin text-gray-600 w-5" />
+          <Loader className="animate-spin text-gray-500 dark:text-gray-600 w-5" />
         ) : (
           inputValue && (
             <button onClick={handleClear}>
-              <CircleX className="text-gray-600 w-5" />
+              <CircleX className="text-gray-500 hover:text-gray-700 dark:text-gray-600 dark:hover:text-gray-400 w-5 transition-colors" />
             </button>
           )
         )}
@@ -99,30 +99,31 @@ function SearchPage() {
             <UserSkeleton />
           ) : error ? (
             <div className="flex items-center justify-center py-12">
-              <p className="text-red-400 text-sm">{error}</p>
+              <p className="text-red-500 dark:text-red-400 text-sm">{error}</p>
             </div>
           ) : data.length === 0 && debouncedTerm ? (
             <div className="flex items-center justify-center py-12">
-              <p className="text-gray-500 text-sm">No users found.</p>
+              <p className="text-gray-500 dark:text-gray-500 text-sm">No users found.</p>
             </div>
           ) : (
             data.map((user: any) => (
               <Link href={`/profile/${user.username}`} key={user._id}>
-                <div className="flex w-full h-16 py-8 px-1 sm:px-2 hover:bg-[#6c6b6b28]">
+                <div className="flex w-full h-16 py-8 px-1 sm:px-2 hover:bg-gray-100 dark:hover:bg-[#6c6b6b28] transition-colors">
                   {/* Profile */}
                   <div className="flex justify-center items-center w-max h-full px-2">
                     <div className="h-13 w-13 rounded-full overflow-hidden">
                       <img
                         src={user.profile_image || "/no-profile.jpg"}
                         alt={user.username}
+                        className="w-full h-full object-cover"
                       />
                     </div>
                   </div>
 
                   {/* Main Info */}
                   <div className="flex flex-col space-y-1 justify-center grow pl-2">
-                    <p className="text-[14px] font-bold">{user.username}</p>
-                    <p className="text-[12px]">{user.fullname || ""}</p>
+                    <p className="text-[14px] font-bold text-gray-900 dark:text-white">{user.username}</p>
+                    <p className="text-[12px] text-gray-600 dark:text-gray-400">{user.fullname || ""}</p>
                   </div>
                 </div>
               </Link>
