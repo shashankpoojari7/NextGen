@@ -55,9 +55,9 @@ export function MainWrapper({ children }: { children: React.ReactNode }) {
     };
   }, [activePeerId, incrementNotification, addUnreadUser, isNotificationDrawerOpen]);
 
-  if (showSplash) {
-    return <SplashScreen onComplete={() => setShowSplash(false)} />;
-  }
+  // if (showSplash) {
+  //   return <SplashScreen onComplete={() => setShowSplash(false)} />;
+  // }
 
   return (
     <SessionProvider>
