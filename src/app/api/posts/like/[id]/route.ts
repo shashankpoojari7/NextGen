@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import Post from "@/models/post.model";
 import Like from "@/models/like.model";
 import Notification from "@/models/notification.model";
+import redis from "@/lib/redis";
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   let session;
@@ -79,6 +80,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         });
       }
     }
+
+    await redis.del(`feed:public:user:${userId}`);
 
     return NextResponse.json(new ApiResponse(200, message), { status: 200 });
 

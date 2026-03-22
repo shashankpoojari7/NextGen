@@ -2,18 +2,39 @@ import dbConnect from "@/database/dbConnection";
 import Post from "@/models/post.model";
 import { NextRequest, NextResponse } from "next/server";
 import { ApiResponse } from "@/lib/ApiResponse";
-import mongoose from "mongoose";
+import redis from "@/lib/redis";
+import Follow from "@/models/follow.model";
 
 export async function GET(request: NextRequest) {
   try {
     await dbConnect();
 
-    // 👇 Replace with your actual authenticated user's ID
-    const userId = request.headers.get("x-user-id"); // example only
-    const userObjectId = userId ? new mongoose.Types.ObjectId(userId) : null;
+    const userId = request.headers.get("x-user-id");
+
+    if(!userId) {
+      return NextResponse.json(
+        new ApiResponse(400, "Missing UserID."),
+        { status: 400 }
+      );
+    }
+
+    const cacheKey = `feed:public:user:${userId}`
+    const cachedPosts = await redis.get(cacheKey);
+    if (cachedPosts) {
+      return NextResponse.json(
+        new ApiResponse(200, "Public feed fetched successfully (cache)!", cachedPosts),
+        { status: 200 }
+      );
+    }
+
+    const following = await Follow.find(
+      { followerId: userId, isAccepted: true },
+      { followingId: 1, _id: 0 }
+    ).lean();
+
+    const followingIds = following.map(f => f.followingId);
 
     const posts = await Post.aggregate([
-      // Lookup the user data (author)
       {
         $lookup: {
           from: "users",
@@ -23,13 +44,12 @@ export async function GET(request: NextRequest) {
         },
       },
       { $unwind: "$userData" },
-
-      // Only public users' posts
       {
-        $match: { "userData.isPrivate": false },
+        $match: { 
+          "userData.isPrivate": false,
+          userId: { $nin: followingIds },
+        },
       },
-
-      // 👇 Lookup likes for each post
       {
         $lookup: {
           from: "likes",
@@ -41,26 +61,14 @@ export async function GET(request: NextRequest) {
         },
       },
 
-      // 👇 Determine if the current user liked this post
-      ...(userObjectId
-        ? [
-            {
-              $addFields: {
-                isLiked: {
-                  $in: [userObjectId, "$likesData.userId"],
-                },
-              },
-            },
-          ]
-        : [
-            {
-              $addFields: {
-                isLiked: false,
-              },
-            },
-          ]),
+      {
+        $addFields: {
+          isLiked: {
+            $in: [userId, "$likesData.userId"],
+          },
+        },
+      },
 
-      // Simplify structure
       {
         $addFields: {
           userId: "$userData._id",
@@ -68,12 +76,9 @@ export async function GET(request: NextRequest) {
           profile_image: "$userData.profile_image",
         },
       },
-
       {
         $sort: { createdAt: -1 }
       },
-
-      // Remove unused fields
       {
         $project: {
           "userData": 0,
@@ -82,8 +87,10 @@ export async function GET(request: NextRequest) {
       },
     ]);
 
+    await redis.set(cacheKey, posts, { ex: 60 });
+
     return NextResponse.json(
-      new ApiResponse(200, "Public posts fetched successfully!", posts),
+      new ApiResponse(200, "Public feed fetched successfully!", posts),
       { status: 200 }
     );
   } catch (error: any) {
