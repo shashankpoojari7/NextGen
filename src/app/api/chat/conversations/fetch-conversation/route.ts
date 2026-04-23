@@ -3,7 +3,6 @@ import Conversation from "@/models/conversation.model";
 import { ApiResponse } from "@/lib/ApiResponse";
 import { NextRequest, NextResponse } from "next/server";
 import { safeObjectId } from "@/helpers/ValidateMongooseId";
-import mongoose from "mongoose";
 
 export async function GET(request: NextRequest) {
   try {
@@ -21,9 +20,7 @@ export async function GET(request: NextRequest) {
     }
 
     const validUserIdString = validUserId.toString();
-    const userObjId = new mongoose.Types.ObjectId(validUserIdString);
 
-    // Aggregation pipeline to fetch conversations, peer info, last message, and unread count
     const conversationList = await Conversation.aggregate([
       // Match conversations where the user is a member
       {
@@ -49,7 +46,6 @@ export async function GET(request: NextRequest) {
         }
       },
 
-      // Convert peerId string to ObjectId for lookup
       {
         $addFields: {
           peerObjId: { $toObjectId: "$peerId" }

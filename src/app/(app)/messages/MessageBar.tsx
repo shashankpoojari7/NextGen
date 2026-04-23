@@ -3,13 +3,15 @@
 import { useEffect, useState } from "react";
 import { useDebounceValue } from "usehooks-ts";
 import Link from "next/link";
-import { Loader, MessageCircleMore, Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { MessageCircleMore, Search } from "lucide-react";
 import { useConversationList } from "@/hooks/useConversationList";
 import { useChatSearch } from "@/hooks/useChatSearch";
 import { useOnlineStore } from "@/store/useOnlineStore";
 import { socket } from "@/lib/socketClient";
 import { useQueryClient } from "@tanstack/react-query";
+import UserSkeleton from "@/components/skeletons/UserSkeleton";
+import Image from "next/image";
+import { ChatSearchResponse, ConversationListItem } from "@/types/chatResponse";
 
 function MessageBar() {
   const [search, setSearch] = useState("");
@@ -30,7 +32,7 @@ function MessageBar() {
       return () => {
         socket.off("chat:message", handler);
       };
-    }, []);
+    }, [queryClient]);
 
   const isSearching = debouncedSearch.length > 0;
 
@@ -53,14 +55,12 @@ function MessageBar() {
         />
       </div>
 
-      {/* CONTENT */}
       <div className="flex flex-col space-y-1 w-full h-[85vh] overflow-auto">
         {isSearching ? (
-          // --- SEARCH RESULTS LAYOUT ---
           <>
             {searchLoading && (
-              <div className="flex justify-center py-10">
-                <Loader className="animate-spin w-7 text-gray-300" />
+              <div className="">
+                <UserSkeleton height={13} width={13} Containerheight={18}/>
               </div>
             )}
 
@@ -73,15 +73,16 @@ function MessageBar() {
             )}
 
             {!searchLoading &&
-              searchResults.map((user: any) => (
+              searchResults.map((user: ChatSearchResponse) => (
                 <Link key={user._id} href={`/messages/${user._id}`}>
                   <div className="flex w-full h-18 py-3 hover:bg-[#6c6b6b28] cursor-pointer rounded-lg">
                     <div className="flex justify-center items-center w-max h-full px-2">
                       <div className="relative">
                         <div className="h-13 w-13 rounded-full overflow-hidden bg-gray-800">
-                          <img
+                          <Image
+                            fill
                             src={user.profile_image || "/no-profile.jpg"}
-                            className="h-full w-full object-cover"
+                            className="h-full w-full object-cover rounded-full"
                             alt="Profile"
                           />
                         </div>
@@ -99,25 +100,23 @@ function MessageBar() {
               ))}
           </>
         ) : (
-          // --- CONVERSATION LIST LAYOUT ---
           <>
             {convoLoading ? (
-              <div className="flex justify-center py-10">
-                <Loader className="animate-spin w-7 text-gray-300" />
+              <div className="">
+                <UserSkeleton height={13} width={13} Containerheight={18}/>
               </div>
             ) : conversations.length === 0 ? ( 
               <div className="flex flex-col items-center justify-center py-16 text-gray-400">
-                <MessageCircleMore className="w-10 h-10 mb-4" />
+                <MessageCircleMore className="w-13 h-10 mb-4" />
                 <p className="text-lg font-semibold">Start a new conversation</p>
                 <p className="text-sm text-center px-4">
                   Your direct messages will appear here. Search for a user to begin chatting!
                 </p>
               </div>
             ) : (
-              conversations.map((convo: any) => {
+              conversations.map((convo: ConversationListItem) => {
                 const isUnread = convo.unreadCount > 0;
                 
-                // Determine CSS classes based on unread status (WhatsApp/Instagram style)
                 const messageClass = isUnread 
                   ? "text-[12px] font-bold text-black dark:text-white truncate" 
                   : "text-[12px] text-gray-600 dark:text-gray-400 truncate";       
@@ -128,9 +127,10 @@ function MessageBar() {
                       <div className="flex justify-center items-center w-max h-full px-2">
                         <div className="relative">
                           <div className="h-13 w-13 rounded-full overflow-hidden bg-gray-800">
-                            <img
+                            <Image
+                              fill
                               src={convo.profile_image || "/no-profile.jpg"}
-                              className="h-full w-full object-cover"
+                              className="h-full w-full object-cover rounded-full"
                               alt="Profile"
                             />
                           </div>

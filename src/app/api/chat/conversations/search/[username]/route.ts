@@ -4,8 +4,6 @@ import { ApiResponse } from "@/lib/ApiResponse";
 import { NextResponse } from "next/server";
 import { safeObjectId } from "@/helpers/ValidateMongooseId";
 import Follow from "@/models/follow.model";
-import mongoose from "mongoose";
-
 export async function GET(request: Request, { params }: { params: Promise<{ username: string }> }) {
   try {
     await dbConnect();

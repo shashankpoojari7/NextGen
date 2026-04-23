@@ -9,7 +9,6 @@ import {
   PlusCircle,
   Search,
   Settings,
-  User,
   UserPlus,
 } from "lucide-react";
 import Link from "next/link";
@@ -39,7 +38,6 @@ import Image from "next/image";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
-import { ApiResponse } from "@/lib/ApiResponse";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNotificationStore } from "@/store/useNotificationStore";
 import NotificationRightDrawer from "../notification/NotificationDrawer";
@@ -135,7 +133,7 @@ function SideBar() {
         <div className="flex flex-col justify-between w-full h-full">
           {/* Top Section */}
           <div className="flex flex-col">
-            <div className={`flex h-25 items-center w-full ${isNotificationDrawerOpen ? "justify-center" : "justify-center lg:pl-3 lg:justify-start"}`}>
+            <Link href="/" className={`flex h-25 items-center w-full ${isNotificationDrawerOpen ? "justify-center" : "justify-center lg:pl-3 lg:justify-start"}`}>
               <h2
                 className={`curly-heading text-black dark:text-white text-2xl text-text font-bold ${isNotificationDrawerOpen ? "hidden" : "hidden lg:block"}`}
               >
@@ -148,9 +146,8 @@ function SideBar() {
                 height={40}
                 className={isNotificationDrawerOpen ? "block" : "block lg:hidden"}
               />
-            </div>
+            </Link>
 
-            {/* Nav Links */}
             <div className="flex flex-col justify-start space-y-2 mb-3">
               <Link
                 href="/"
@@ -240,7 +237,6 @@ function SideBar() {
                 </div>
               </div>
 
-              {/* ✅ Add Post Dialog */}
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
                   <div className="
@@ -267,13 +263,14 @@ function SideBar() {
                   </DialogHeader>
 
                   <form onSubmit={handleSubmit} className="space-y-5">
-                    {/* Image Upload */}
                     <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4">
                       {preview ? (
                         <>
-                          <img
+                          <Image
                             src={preview}
                             alt="Preview"
+                            width={500}
+                            height={250}
                             className="w-full max-h-[250px] object-cover rounded-md"
                           />
                           <Button
@@ -308,7 +305,6 @@ function SideBar() {
                       )}
                     </div>
 
-                    {/* Caption */}
                     <div>
                       <label
                         htmlFor="caption"
@@ -326,7 +322,6 @@ function SideBar() {
                       />
                     </div>
 
-                    {/* Location */}
                     <div>
                       <label
                         htmlFor="location"
@@ -344,7 +339,6 @@ function SideBar() {
                       />
                     </div>
 
-                    {/* Footer Buttons */}
                     <DialogFooter className="mt-3 flex items-center space-x-2 w-full">
                       <DialogClose asChild>
                         <Button variant="outline" className="py-4 px-9">Cancel</Button>
@@ -373,7 +367,7 @@ function SideBar() {
                   transition-all duration-200"
               >
                 <div className={`w-full flex items-center gap-2 ${isNotificationDrawerOpen ? "justify-center" : "justify-center lg:justify-start"}`}>
-                  <img
+                  <Image
                     src={session?.user?.image || "/no-profile.jpg"}
                     alt="profile"
                     width={32}
@@ -427,7 +421,7 @@ function SideBar() {
                     Confirm Logout
                   </AlertDialogTitle>
                   <AlertDialogDescription className="text-sm text-gray-600 dark:text-gray-400">
-                    Are you sure you want to log out? You'll need to sign in again
+                    Are you sure you want to log out? You&apos;ll need to sign in again
                     to access your account.
                   </AlertDialogDescription>
                 </AlertDialogHeader>

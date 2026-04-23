@@ -5,14 +5,14 @@ import { CircleX, Loader } from "lucide-react";
 import axios from "axios";
 import { useDebounceValue } from "usehooks-ts";
 import { ApiResponse } from "@/lib/ApiResponse";
-import { Types } from "mongoose";
 import Link from "next/link";
 import UserSkeleton from "@/components/skeletons/UserSkeleton";
 
 export interface searchData {
   profile_image: string;
   username: string;
-  _id: Types.ObjectId;
+  fullname: string;
+  _id: string;
 }
 
 function SearchPage() {
@@ -77,7 +77,7 @@ function SearchPage() {
           autoFocus
           value={inputValue}
           placeholder="Search..."
-          className="w-full bg-transparent text-gray-900 dark:text-gray-200 text-sm focus:outline-none placeholder-gray-500 dark:placeholder-gray-500"
+          className="w-full bg-transparent text-gray-900 dark:text-gray-200 placeholder:text-sm focus:outline-none placeholder-gray-500 dark:placeholder-gray-500"
           onChange={(e) => setInputValue(e.target.value)}
         />
 
@@ -94,9 +94,11 @@ function SearchPage() {
 
       {/* Search Results */}
       <div className="w-full">
-        <div className="flex flex-col space-y-1 w-full overflow-auto">
+        <div className="flex flex-col  space-y-1 w-full overflow-auto">
           {loading ? (
-            <UserSkeleton />
+            <div className="px-1 sm:px-2">
+              <UserSkeleton height={13} width={13}/>
+            </div>
           ) : error ? (
             <div className="flex items-center justify-center py-12">
               <p className="text-red-500 dark:text-red-400 text-sm">{error}</p>
@@ -106,7 +108,7 @@ function SearchPage() {
               <p className="text-gray-500 dark:text-gray-500 text-sm">No users found.</p>
             </div>
           ) : (
-            data.map((user: any) => (
+            data.map((user: searchData) => (
               <Link href={`/profile/${user.username}`} key={user._id}>
                 <div className="flex w-full h-16 py-8 px-1 sm:px-2 hover:bg-gray-100 dark:hover:bg-[#6c6b6b28] transition-colors">
                   {/* Profile */}

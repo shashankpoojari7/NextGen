@@ -1,10 +1,21 @@
-export default function UserSkeleton({ count = 10 }) {
+export default function UserSkeleton(
+  { 
+    count = 10, 
+    height = 12, 
+    width = 12 ,
+    Containerheight = 16
+  }: {
+  count?: number,
+  height?: number,
+  width?: number,
+  Containerheight?: number
+}) {
   return (
     <>
       {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="flex w-full h-16 items-center py-4 px-2">
+        <div key={i} className={`flex w-full h-${Containerheight} items-center py-4`}>
           <div className="flex justify-center items-center w-max px-2">
-            <div className="h-12 w-12 rounded-full overflow-hidden">
+            <div className={`h-${height} w-${width} rounded-full overflow-hidden`}>
               <div className="user-skeleton-shimmer w-full h-full rounded-full" />
             </div>
           </div>
