@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ApiResponse } from "@/lib/ApiResponse";
-import mongoose from "mongoose";
 import dbConnect from "@/database/dbConnection";
-import User from "@/models/user.model";
 import { safeObjectId } from "@/helpers/ValidateMongooseId";
-import { profile } from "console";
 import Follow from "@/models/follow.model";
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -167,7 +164,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       { status: 200 }
     );
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("User Profile Error:", error);
     return NextResponse.json(
       new ApiResponse(500, "Something went wrong while fetching user profile"),

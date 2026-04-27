@@ -20,7 +20,10 @@ import { axiosInstance } from "@/services/axios";
 import { ApiResponse } from "@/lib/ApiResponse";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import Image from "next/image";
 import { useQueryClient } from "@tanstack/react-query";
+import FollowModalSkeleton from "@/components/skeletons/FollowModalSkeleton";
+import axios from "axios";
 
 interface FollowerUser {
   _id: string;
@@ -51,20 +54,31 @@ export default function FollowingModal({ closeModel, userId }: FollowingModalPro
   const isOwnProfile = session?.user?.id === userId;
 
   useEffect(() => {
-    async function fetchUsersFollowingList() {
+    const fetchUsersFollowingList = async () => {
       try {
         setIsLoading(true);
         setError(null);
-        const response = await axiosInstance.get<ApiResponse>(`/api/user/following/${userId}`);
+        const response = await axiosInstance.get<ApiResponse>(
+          `/api/user/following/${userId}`
+        );
         setFollowers(response.data.data || []);
         setFilteredFollowers(response.data.data || []);
-      } catch (err: any) {
-        setError(err.response?.data?.message || "Failed to load following");
+      } catch (err: unknown) {
+        if (axios.isAxiosError(err)) {
+          setError(
+            err.response?.data?.message || "Failed to load following"
+          );
+        } else if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("Something went wrong");
+        }
+
         console.error("Error fetching following:", err);
       } finally {
         setIsLoading(false);
       }
-    }
+    };
 
     fetchUsersFollowingList();
   }, [userId]);
@@ -162,11 +176,12 @@ export default function FollowingModal({ closeModel, userId }: FollowingModalPro
           </AlertDialogTrigger>
           <AlertDialogContent className="w-[90vw] max-w-[400px] bg-white dark:bg-[#1c1c1c] text-gray-900 dark:text-white border border-gray-200 dark:border-none rounded-2xl shadow-xl mx-4">
             <AlertDialogHeader className="flex flex-col items-center justify-center space-y-2 py-3 sm:py-4">
-              <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full overflow-hidden border-2 border-gray-300 dark:border-gray-700">
-                <img
+              <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full overflow-hidden border-2 border-gray-300 dark:border-gray-700 relative">
+                <Image
                   src={user.profile_image || "/no-profile.jpg"}
                   alt={user.username}
-                  className="object-cover w-full h-full"
+                  fill
+                  className="object-cover"
                 />
               </div>
               <AlertDialogTitle className="text-base sm:text-lg font-semibold text-center mt-2">
@@ -222,11 +237,12 @@ export default function FollowingModal({ closeModel, userId }: FollowingModalPro
           </AlertDialogTrigger>
           <AlertDialogContent className="w-[90vw] max-w-[400px] bg-white dark:bg-[#1c1c1c] text-gray-900 dark:text-white border border-gray-200 dark:border-none rounded-2xl shadow-xl mx-4">
             <AlertDialogHeader className="flex flex-col items-center justify-center space-y-2 py-3 sm:py-4">
-              <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full overflow-hidden border-2 border-gray-300 dark:border-gray-700">
-                <img
+              <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full overflow-hidden border-2 border-gray-300 dark:border-gray-700 relative">
+                <Image
                   src={user.profile_image || "/no-profile.jpg"}
                   alt={user.username}
-                  className="object-cover w-full h-full"
+                  fill
+                  className="object-cover"
                 />
               </div>
               <AlertDialogTitle className="text-base sm:text-lg font-semibold text-center mt-2">
@@ -348,11 +364,9 @@ export default function FollowingModal({ closeModel, userId }: FollowingModalPro
           </div>
         </div>
 
-        <div className="overflow-y-auto max-h-[calc(85vh-120px)] sm:max-h-[calc(80vh-140px)]">
+        <div className="overflow-y-auto max-h-[calc(85vh-120px)] sm:max-h-[calc(80vh-140px)] min-h-[370px]">
           {isLoading ? (
-            <div className="flex justify-center items-center py-8 sm:py-10">
-              <Loader2 className="w-6 h-6 sm:w-8 sm:h-8 animate-spin text-cyan-500 dark:text-cyan-400" />
-            </div>
+            <FollowModalSkeleton />
           ) : error ? (
             <div className="flex flex-col items-center justify-center py-8 sm:py-10 px-4">
               <p className="text-red-500 text-center text-xs sm:text-sm">{error}</p>
@@ -377,11 +391,12 @@ export default function FollowingModal({ closeModel, userId }: FollowingModalPro
                   className="flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 hover:bg-gray-50 active:bg-gray-100 dark:hover:bg-[#2a2a2a] dark:active:bg-[#333333] transition"
                 >
                   <div className="flex items-center space-x-2 sm:space-x-3 flex-1 min-w-0 mr-2 sm:mr-3">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden border-2 border-cyan-500 dark:border-cyan-700 shrink-0">
-                      <img
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden border-2 border-cyan-500 dark:border-cyan-700 shrink-0 relative">
+                      <Image
                         src={user.profile_image || "/no-profile.jpg"}
                         alt={user.username}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
                       />
                     </div>
                     <div className="flex flex-col min-w-0">

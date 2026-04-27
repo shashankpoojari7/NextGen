@@ -134,7 +134,7 @@ export default function PostModalLayout({
         {/* HEADER */}
         <div className="px-1 border-b border-gray-200 dark:border-gray-700/50">
           <section className="flex w-full h-18 items-center">
-            <div className="flex justify-center items-center px-2">
+            <div className="flex justify-center items-center px-2 shrink-0">
               <img
                 src={profile_image || "/no-profile.jpg"}
                 alt={username}
@@ -242,7 +242,7 @@ export default function PostModalLayout({
   // 🔹 MOBILE/TABLET LAYOUT (below md)
   const mobileContent = (
     <div
-      className="md:hidden bg-white dark:bg-[#2a2d32] rounded-sm w-[85%] h-[70vh] sm:h-[90vh]
+      className="md:hidden bg-white dark:bg-[#2a2d32] rounded-sm w-[85%]  sm:h-[90vh]
                 overflow-hidden flex flex-col mx-auto shadow-2xl"
       onClick={(e) => e.stopPropagation()}
     >
@@ -257,7 +257,7 @@ export default function PostModalLayout({
       {/* HEADER */}
       <div className="px-1 border-b border-gray-200 dark:border-gray-700/50">
         <section className="flex w-full h-15 sm:h-16 items-center">
-          <div className="flex justify-center items-center px-2 sm:px-3">
+          <div className="flex justify-center items-center px-2 sm:px-3 shrink-0">
             <img
               src={profile_image || "/no-profile.jpg"}
               alt={username}
@@ -284,7 +284,7 @@ export default function PostModalLayout({
       </div>
 
       {/* IMAGE */}
-      <div className="flex-1 bg-gray-100 dark:bg-black flex items-center justify-center overflow-hidden">
+      <div className=" bg-gray-100 dark:bg-black flex items-center justify-center overflow-hidden">
         <img src={imageUrl} alt={_id} className="w-full h-full object-contain" />
       </div>
 

@@ -21,6 +21,8 @@ import { ApiResponse } from "@/lib/ApiResponse";
 import { useSession } from "next-auth/react";
 import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
+import FollowModalSkeleton from "@/components/skeletons/FollowModalSkeleton";
+import axios from "axios";
 
 interface FollowerUser {
   _id: string;
@@ -51,20 +53,33 @@ export default function FollowersModal({ closeModel, userId }: FollowersModalPro
   const isOwnProfile = session?.user?.id === userId;
 
   useEffect(() => {
-    async function fetchUsersFollowersList() {
+    const fetchUsersFollowersList = async () => {
       try {
         setIsLoading(true);
         setError(null);
-        const response = await axiosInstance.get<ApiResponse>(`/api/user/follower/${userId}`);
+
+        const response = await axiosInstance.get<ApiResponse>(
+          `/api/user/follower/${userId}`
+        );
+
         setFollowers(response.data.data || []);
         setFilteredFollowers(response.data.data || []);
-      } catch (err: any) {
-        setError(err.response?.data?.message || "Failed to load followers");
+      } catch (err: unknown) {
+        if (axios.isAxiosError(err)) {
+          setError(
+            err.response?.data?.message || "Failed to load followers"
+          );
+        } else if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("Something went wrong");
+        }
+
         console.error("Error fetching followers:", err);
       } finally {
         setIsLoading(false);
       }
-    }
+    };
 
     fetchUsersFollowersList();
   }, [userId]);
@@ -179,7 +194,7 @@ export default function FollowersModal({ closeModel, userId }: FollowersModalPro
                 Remove Follower
               </AlertDialogTitle>
               <AlertDialogDescription className="text-sm text-gray-600 dark:text-gray-400">
-                Are you sure you want to remove <span className="font-bold text-gray-900 dark:text-gray-200">{user.username}</span> from your followers? They won't be notified.
+                Are you sure you want to remove <span className="font-bold text-gray-900 dark:text-gray-200">{user.username}</span> from your followers? They won&apos;t be notified.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -357,11 +372,9 @@ export default function FollowersModal({ closeModel, userId }: FollowersModalPro
         </div>
 
         {/* Content Area */}
-        <div className="overflow-y-auto max-h-[calc(80vh-140px)]">
+        <div className="overflow-y-auto max-h-[calc(80vh-140px)] min-h-[370px]">
           {isLoading ? (
-            <div className="flex justify-center items-center py-10">
-              <Loader2 className="w-8 h-8 animate-spin text-cyan-500 dark:text-cyan-400" />
-            </div>
+            <FollowModalSkeleton />
           ) : error ? (
             <div className="flex flex-col items-center justify-center py-10 px-4">
               <p className="text-red-500 dark:text-red-500 text-center">{error}</p>
