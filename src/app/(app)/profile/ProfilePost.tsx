@@ -5,17 +5,15 @@ import { useUserProfilePosts } from "@/hooks/useUserProfilePosts";
 import { useState } from "react";
 import ProfilePostModal from "@/components/post-preview/ProfilePostModal";
 import { IncomingPostData } from "@/types/postResponseType";
+import { ProfilePostsSkeleton } from "@/components/skeletons/ProfileSkeleton";
 
-export function ProfilePost({ userId }: { userId: string; }) {
+export function ProfilePost({ userId }: { userId: string }) {
   const { data: posts, isLoading, isError, error } = useUserProfilePosts(userId);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
+  // Grid skeleton only — heading is already rendered by UserProfilePage above
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center py-8 sm:py-10 text-gray-500 dark:text-gray-400">
-        <p className="text-sm sm:text-base">Loading posts...</p>
-      </div>
-    );
+    return <ProfilePostsSkeleton />;
   }
 
   if (isError || !posts) {
@@ -29,6 +27,7 @@ export function ProfilePost({ userId }: { userId: string; }) {
   }
 
   const typedPosts = posts as IncomingPostData[];
+
   return (
     <div>
       {typedPosts.length > 0 ? (
@@ -46,29 +45,29 @@ export function ProfilePost({ userId }: { userId: string; }) {
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
               />
 
-              {/* Hover overlay - Desktop */}
+              {/* Hover overlay — Desktop */}
               <div className="absolute inset-0 hidden md:flex items-end justify-center bg-black/0 hover:bg-black/50 opacity-0 hover:opacity-100 transition-all duration-300">
                 <div className="flex justify-center items-center gap-4 lg:gap-6 w-full text-white text-xs lg:text-sm font-semibold pb-3 lg:pb-4">
                   <div className="flex items-center gap-1.5">
-                    <Heart className="w-4 h-4 lg:w-5 lg:h-5 fill-white" /> 
+                    <Heart className="w-4 h-4 lg:w-5 lg:h-5 fill-white" />
                     <span>{p.likeCount}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <MessageCircle className="w-4 h-4 lg:w-5 lg:h-5 fill-white" /> 
+                    <MessageCircle className="w-4 h-4 lg:w-5 lg:h-5 fill-white" />
                     <span>{p.commentCount}</span>
                   </div>
                 </div>
               </div>
 
-              {/* Stats overlay - Mobile (always visible) */}
+              {/* Stats overlay — Mobile (always visible) */}
               <div className="absolute inset-0 flex md:hidden items-end justify-center bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none">
                 <div className="flex justify-center items-center gap-3 sm:gap-4 w-full text-white text-[10px] sm:text-xs font-semibold pb-2 sm:pb-3">
                   <div className="flex items-center gap-1">
-                    <Heart className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> 
+                    <Heart className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                     <span>{p.likeCount}</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <MessageCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> 
+                    <MessageCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                     <span>{p.commentCount}</span>
                   </div>
                 </div>

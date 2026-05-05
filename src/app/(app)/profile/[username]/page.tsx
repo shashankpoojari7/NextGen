@@ -20,6 +20,7 @@ import {
 import FollowingModal from "../FollowingModal";
 import FollowersModal from "../FollowerModal";
 import { ApiResponse } from "@/lib/ApiResponse";
+import { ProfileHeaderSkeleton, ProfilePostsSkeleton } from "@/components/skeletons/ProfileSkeleton";
 
 export default function UserProfilePage() {
   const params = useParams();
@@ -44,29 +45,23 @@ export default function UserProfilePage() {
         return axiosInstance.delete(`/api/user/delete-request?requestId=${id}`);
       }
     },
-
     onMutate: async ({ id }) => {
       await queryClient.cancelQueries();
-
       const previousRequests = queryClient.getQueryData<FollowData[]>(["follow-requests"]);
-
       if (previousRequests) {
         queryClient.setQueryData<FollowData[]>(
           ["follow-requests"],
           previousRequests.filter((req) => req?._id != id)
         );
       }
-
       return { previousRequests };
     },
-
     onError: (_err, _vars, context) => {
       if (context?.previousRequests) {
         queryClient.setQueryData(["follow-requests"], context.previousRequests);
       }
       toast.error("Something went wrong. Please try again.");
     },
-
     onSuccess: (_data, variables) => {
       if (variables.action === "accept") {
         toast.success("You accepted the follow request!");
@@ -74,21 +69,33 @@ export default function UserProfilePage() {
         toast.info("Follow request deleted.");
       }
     },
-
     onSettled: async () => {
       await queryClient.invalidateQueries({ queryKey: ["follow-requests"] });
       await queryClient.invalidateQueries({ queryKey: ["user-profile"] });
     },
   });
 
+  // ── Phase 1: loading — skeleton mirrors the EXACT same DOM structure as the
+  //    real loaded layout so there is zero CLS when data arrives.
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-screen text-gray-500 dark:text-gray-400">
-        Loading profile...
+      <div className="w-full max-w-5xl mx-auto">
+        {/* Header skeleton (avatar + info + follow buttons) */}
+        <ProfileHeaderSkeleton />
+
+        {/* Posts section — same wrapper + heading as real layout */}
+        <div className="mx-2 mt-5 md:mt-10">
+          <div className="flex items-center gap-2 mb-5 px-2">
+            <div className="user-skeleton-shimmer rounded-md w-5 h-5" />
+            <div className="user-skeleton-shimmer rounded-md h-6 w-16" />
+          </div>
+          <ProfilePostsSkeleton />
+        </div>
       </div>
     );
   }
 
+  // ── Error state ────────────────────────────────────────────────────────────
   if (isError || !data || data.length === 0) {
     return (
       <div className="flex justify-center items-center min-h-screen text-red-500 dark:text-red-500">
@@ -97,13 +104,10 @@ export default function UserProfilePage() {
     );
   }
 
+  // ── Phase 2: profile loaded ───────────────────────────────────────────────
   const user = data[0];
-  const hasRequestedToMe = followRequests.some(
-    (req) => req.follower?._id === user._id
-  );
-  const requestId = followRequests.find(
-    (req) => req.follower?._id === user._id
-  )?._id;
+  const hasRequestedToMe = followRequests.some((req) => req.follower?._id === user._id);
+  const requestId = followRequests.find((req) => req.follower?._id === user._id)?._id;
 
   const isOwnProfile = session?.user?.id === user._id;
   const canViewFollowingList = isOwnProfile || user.isFollowing || !user.isPrivate;
@@ -113,26 +117,26 @@ export default function UserProfilePage() {
     setIsOptionsOpen(false);
   };
 
-  const handleRemovePhoto = async() => {
+  const handleRemovePhoto = async () => {
     try {
-      const response = await axiosInstance.delete<ApiResponse>('/api/user/remove-profile')
-
-      if(response.data.success) {
+      const response = await axiosInstance.delete<ApiResponse>("/api/user/remove-profile");
+      if (response.data.success) {
         await update();
-        await queryClient.invalidateQueries({
-          queryKey: ["user-profile", username],
-        });
+        await queryClient.invalidateQueries({ queryKey: ["user-profile", username] });
         toast.success("Profile picture removed!");
         setIsOptionsOpen(false);
       }
     } catch (error: any) {
       toast.error("Failed to remove profile picture");
-      console.error(error); 
+      console.error(error);
     }
   };
 
+  const canViewPosts = user.isFollowing || !user.isPrivate || session?.user?.id === user._id;
+
   return (
     <div className="w-full max-w-5xl mx-auto">
+      {/* ── Follow request banner ── */}
       {hasRequestedToMe && (
         <div className="flex flex-col w-full px-3">
           <div className="flex flex-wrap justify-center items-center w-full py-4 text-sm text-gray-900 dark:text-white">
@@ -155,13 +159,13 @@ export default function UserProfilePage() {
           </div>
         </div>
       )}
-      
-      {/* Profile Header */}
+
+      {/* ── Profile Header ── */}
       <div className="flex flex-row w-full gap-2 sm:gap-6 mt-4 md:mt-6">
-        {/* Profile Image */}
+        {/* Avatar */}
         <div className="flex justify-center items-start sm:items-center pl-6 px-1 pt-2 sm:pl-4 sm:pt-0 sm:px-7 sm:py-10 shrink-0">
           <div
-            className="flex justify-center items-center rounded-full overflow-hidden h-22 w-22 sm:h-32 sm:w-32 lg:h-40 lg:w-40 border-3 border-cyan-700 dark:border-cyan-700 cursor-pointer hover:opacity-90 transition"
+            className="flex justify-center items-center rounded-full overflow-hidden h-[88px] w-[88px] sm:h-32 sm:w-32 lg:h-40 lg:w-40 border-3 border-cyan-700 dark:border-cyan-700 cursor-pointer hover:opacity-90 transition"
             onClick={() => setIsOptionsOpen(true)}
           >
             <img
@@ -175,31 +179,37 @@ export default function UserProfilePage() {
         {/* User Info */}
         <div className="flex flex-col justify-start items-start w-full space-y-4 sm:py-10 px-3 sm:px-0">
           <div className="flex flex-col text-left space-y-1 sm:space-y-2 cursor-default w-full">
-            <h1 className="text-lg sm:text-2xl font-semibold text-gray-900 dark:text-white truncate">@{user.username}</h1>
-            <h3 className="text-[12px] sm:text-[13px] text-gray-500 dark:text-gray-400 truncate">{user.fullname}</h3>
+            <h1 className="text-lg sm:text-2xl font-semibold text-gray-900 dark:text-white truncate">
+              @{user.username}
+            </h1>
+            <h3 className="text-[12px] sm:text-[13px] text-gray-500 dark:text-gray-400 truncate">
+              {user.fullname}
+            </h3>
           </div>
 
           <div className="flex space-x-6 sm:space-x-10 justify-start w-full">
             <div className="flex flex-col items-center cursor-pointer">
-              <span className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">{user.postsCount || 0}</span>
+              <span className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">
+                {user.postsCount || 0}
+              </span>
               <span className="text-[11px] sm:text-xs text-gray-500 dark:text-gray-400">Posts</span>
             </div>
-            <div 
+            <div
               className="flex flex-col items-center cursor-pointer"
-              onClick={() => {
-                if (canViewFollowersList) setIsFollowerModelOpen(true)
-              }}
+              onClick={() => { if (canViewFollowersList) setIsFollowerModelOpen(true); }}
             >
-              <span className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">{user.followersCount}</span>
+              <span className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">
+                {user.followersCount}
+              </span>
               <span className="text-[11px] sm:text-xs text-gray-500 dark:text-gray-400">Followers</span>
             </div>
-            <div 
+            <div
               className="flex flex-col items-center cursor-pointer"
-              onClick={() => {
-                if (canViewFollowingList) setIsFollowingModelOpen(true)
-              }}
+              onClick={() => { if (canViewFollowingList) setIsFollowingModelOpen(true); }}
             >
-              <span className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">{user.followingCount}</span>
+              <span className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">
+                {user.followingCount}
+              </span>
               <span className="text-[11px] sm:text-xs text-gray-500 dark:text-gray-400">Following</span>
             </div>
           </div>
@@ -210,19 +220,20 @@ export default function UserProfilePage() {
         </div>
       </div>
 
-      {/* Follow Section */}
+      {/* ── Follow Section ── */}
       <div className="flex space-x-4 w-full px-3 mt-4 sm:mt-6">
         <FollowSection user={user} />
       </div>
 
-      {/* Posts */}
+      {/* ── Posts ── */}
       <div className="mx-2 mt-5 md:mt-10">
-        {user.isFollowing || !user.isPrivate || session?.user?.id === user._id ? (
+        {canViewPosts ? (
           <>
             <div className="flex items-center gap-2 mb-5 px-2">
               <Camera className="w-5 h-5 text-cyan-500 dark:text-cyan-400" />
               <h2 className="text-xl font-bold text-gray-900 dark:text-white">Posts</h2>
             </div>
+            {/* ProfilePost renders ProfilePostsSkeleton (grid only) while posts load */}
             <ProfilePost userId={user._id} />
           </>
         ) : (
@@ -230,23 +241,23 @@ export default function UserProfilePage() {
             <div className="bg-gray-200 dark:bg-zinc-900 rounded-full p-6 mb-4">
               <Lock className="w-12 h-12 text-gray-900 dark:text-white" />
             </div>
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 text-center">This Account is Private</h3>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 text-center">
+              This Account is Private
+            </h3>
             <p className="text-gray-600 dark:text-zinc-400 text-center max-w-sm text-base">
               Follow this account to see their photos and videos
             </p>
           </div>
         )}
       </div>
-      
 
-      {/* --- PROFILE OPTIONS DIALOG --- */}
+      {/* ── Profile Options Dialog ── */}
       <Dialog open={isOptionsOpen} onOpenChange={setIsOptionsOpen}>
         <DialogContent
           className="w-[90vw] max-w-[400px] bg-white dark:bg-[#262626] text-gray-900 dark:text-white border-none rounded-2xl p-0 overflow-hidden"
           showCloseButton={false}
         >
           <DialogTitle className="sr-only">Profile Photo Options</DialogTitle>
-
           <div className="flex flex-col text-center divide-y divide-gray-300 dark:divide-gray-500">
             <button
               onClick={() => setIsFullscreenOpen(true)}
@@ -280,21 +291,19 @@ export default function UserProfilePage() {
         </DialogContent>
       </Dialog>
 
-      {/* --- FULLSCREEN IMAGE VIEW --- */}
+      {/* ── Fullscreen Image View ── */}
       <Dialog open={isFullscreenOpen} onOpenChange={setIsFullscreenOpen}>
         <DialogContent
           className="flex justify-center items-center bg-transparent border-none p-0 backdrop-blur-sm w-full h-full max-w-none"
           showCloseButton={false}
         >
           <DialogTitle className="sr-only">Fullscreen Image</DialogTitle>
-
           <button
             onClick={() => setIsFullscreenOpen(false)}
             className="absolute top-6 right-6 text-gray-400 hover:text-white text-2xl font-light z-10"
           >
             ✕
           </button>
-
           <img
             src={user.profile_image || "/no-profile.jpg"}
             alt="Profile Fullscreen"
@@ -303,8 +312,12 @@ export default function UserProfilePage() {
         </DialogContent>
       </Dialog>
 
-      {isFollowingModelOpen && <FollowingModal userId={user._id} closeModel={setIsFollowingModelOpen}/>}
-      {isFollowerModelOpen && <FollowersModal userId={user._id} closeModel={setIsFollowerModelOpen}/>}
+      {isFollowingModelOpen && (
+        <FollowingModal userId={user._id} closeModel={setIsFollowingModelOpen} />
+      )}
+      {isFollowerModelOpen && (
+        <FollowersModal userId={user._id} closeModel={setIsFollowerModelOpen} />
+      )}
     </div>
   );
 }
