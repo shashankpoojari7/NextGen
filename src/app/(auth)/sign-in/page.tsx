@@ -1,4 +1,4 @@
-import { SignIn } from "./SignInForm";
+import { SignIn } from "@/components/auth/SignInForm";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/option";
 import { redirect } from "next/navigation";

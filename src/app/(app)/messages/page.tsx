@@ -1,5 +1,5 @@
 import React from 'react'
-import MessageBar from './MessageBar'
+import MessageBar from '@/components/messages/MessageBar'
 
 function page() {
   return (

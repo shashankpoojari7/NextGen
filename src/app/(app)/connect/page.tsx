@@ -1,5 +1,5 @@
 import React from 'react'
-import ConnectPage from './ConnectPage'
+import ConnectPage from '@/components/connect/ConnectPage'
 
 function page() {
   return <ConnectPage/>

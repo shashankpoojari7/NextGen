@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
 
   useEffect(() => {

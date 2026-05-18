@@ -7,8 +7,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Camera, Lock } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
-import { FollowSection } from "../FollowSection";
-import { ProfilePost } from "../ProfilePost";
+import { FollowSection } from "@/components/profile/FollowSection";
+import { ProfilePost } from "@/components/profile/ProfilePost";
 import { FollowData } from "@/types/userFollowResponse";
 import { toast } from "sonner";
 import { useFollowRequests } from "@/hooks/useFollowRequests";
@@ -17,8 +17,8 @@ import {
   DialogContent,
   DialogTitle,
 } from "@/components/ui/dialog";
-import FollowingModal from "../FollowingModal";
-import FollowersModal from "../FollowerModal";
+import FollowingModal from "@/components/profile/FollowingModal";
+import FollowersModal from "@/components/profile/FollowerModal";
 import { ApiResponse } from "@/lib/ApiResponse";
 import { ProfileHeaderSkeleton, ProfilePostsSkeleton } from "@/components/skeletons/ProfileSkeleton";
 

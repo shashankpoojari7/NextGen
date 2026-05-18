@@ -1,7 +1,7 @@
 "use client"
 
 import React from 'react'
-import SearchPage from './SearchPage'
+import SearchPage from '@/components/search/SearchPage'
 
 function page() {
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import ChatTest from "../ChatTest";
+import ChatTest from "@/components/messages/ChatTest";
 import { useParams } from "next/navigation";
 
 export default function ChatPage() {
