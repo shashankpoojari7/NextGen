@@ -32,6 +32,7 @@ export default function Post({ post }: PostProps) {
     location,
     createdAt,
     isLiked,
+    isPublicPost
   } = post;
 
   const [timeAgo, setTimeAgo] = useState(getTimeAgo(createdAt));
@@ -41,6 +42,7 @@ export default function Post({ post }: PostProps) {
   const [localComments, setLocalComments] = useState<
     { username: string; text: string }[]
   >([]);
+  const [isFollowing, setIsFollowing] = useState(post.isPublicPost ? false : undefined);
 
   const { data: session } = useSession();
   const queryClient = useQueryClient();
@@ -155,6 +157,24 @@ export default function Post({ post }: PostProps) {
     );
   };
 
+  const handleFollow = async () => {
+    try {
+      setIsFollowing(true);
+
+      await axiosInstance.post(
+        `/api/user/follow?followingId=${userId}`
+      );
+
+      socket.emit("notification", {
+        type: "FOLLOW",
+        from: session?.user?.id,
+        to: userId,
+      });
+    } catch {
+      setIsFollowing(false);
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col w-full space-y-1 px-1 sm:px-0">
@@ -179,8 +199,19 @@ export default function Post({ post }: PostProps) {
             </p>
           </div>
 
-          <div className="ml-auto p-3 text-gray-900 dark:text-gray-400 hover:text-gray-500 dark:hover:text-gray-200 transition">
-            <Ellipsis onClick={() => setIsPostOptionsOpen(true)} />
+          <div className="ml-auto flex items-center gap-1">
+            {isPublicPost && !isOwner && (
+              <button
+                onClick={handleFollow}
+                disabled={isFollowing}
+                className="text-blue-500 font-semibold text-sm"
+              >
+                {isFollowing ? "Following" : "Follow"}
+              </button>
+            )}
+            <div className="p-3 text-gray-900 dark:text-gray-400 hover:text-gray-500 dark:hover:text-gray-200 transition">
+              <Ellipsis onClick={() => setIsPostOptionsOpen(true)} />
+            </div>
           </div>
         </section>
 

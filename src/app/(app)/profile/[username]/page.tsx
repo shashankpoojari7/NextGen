@@ -126,7 +126,7 @@ export default function UserProfilePage() {
         toast.success("Profile picture removed!");
         setIsOptionsOpen(false);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error("Failed to remove profile picture");
       console.error(error);
     }

@@ -1,10 +1,13 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { getPublicPosts } from "@/services/getPublicPosts";
-import { IncomingPostData } from "@/types/postResponseType";
+import { PublicFeedResponse } from "@/types/postResponseType";
 
-export function usePublicPosts() {
-  return useQuery<IncomingPostData[]>({
+export const usePublicPosts = (enabled: boolean) => {
+  return useInfiniteQuery<PublicFeedResponse>({
     queryKey: ["public-posts"],
-    queryFn: getPublicPosts,
+    queryFn: ({ pageParam }) => getPublicPosts(pageParam as string | null),
+    initialPageParam: null,
+    enabled,
+    getNextPageParam: (lastPage) =>lastPage.hasMore ? lastPage.nextCursor : undefined,
   });
 }

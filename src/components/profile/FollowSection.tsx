@@ -16,7 +16,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import Image from "next/image";
 import EditProfileDialog from "./EditProfileDialogProps";
 import Link from "next/link";
 import { socket } from "@/lib/socketClient";
@@ -34,7 +33,7 @@ export function FollowSection({ user }: { user: UserProfile }) {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async ({ action, id }: { action: "follow" | "unsend" | "unfollow"; id: string }) => {
+    mutationFn: async ({ action }: { action: "follow" | "unsend" | "unfollow"; id: string }) => {
       if (action === "follow") {
         const res = await axiosInstance.post<ApiResponse>(`/api/user/follow?followingId=${profile._id}&isPrivate=${profile.isPrivate}`);
         if(res?.data?.success) {

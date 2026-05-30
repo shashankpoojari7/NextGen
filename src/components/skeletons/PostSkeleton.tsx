@@ -1,5 +1,5 @@
 import React from 'react'
-import { Ellipsis, Heart, MessageCircle, Send } from 'lucide-react';
+import { Ellipsis, Heart, Loader, MessageCircle, Send } from 'lucide-react';
 
 function PostSkeleton() {
   const skeletons = Array.from({ length: 3 });
@@ -55,4 +55,15 @@ function PostSkeleton() {
   );
 }
 
-export default PostSkeleton;
+function FeedSpinner() {
+  return (
+    <div className="flex items-center justify-center mb-5">
+      <Loader className="h-8 w-8 animate-spin rounded-full text-gray-500" />
+    </div>
+  );
+}
+
+export {
+  PostSkeleton,
+  FeedSpinner
+};

@@ -1,13 +1,19 @@
 import { axiosInstance } from "./axios";
 import { ApiResponse } from "@/lib/ApiResponse";
-import { IncomingPostData } from "@/types/postResponseType";
+import { PublicFeedResponse } from "@/types/postResponseType";
 
-export const getPublicPosts = async (): Promise<IncomingPostData[]> => {
-  const res = await axiosInstance.get<ApiResponse<IncomingPostData[]>>("/api/posts/feed/public");
+export const getPublicPosts = async (cursor?: string | null): Promise<PublicFeedResponse> => {
+  const res = await axiosInstance.get<ApiResponse<PublicFeedResponse>>("/api/posts/feed/public", {
+    params: {
+      cursor
+    }
+  });
 
-  if (!res.data.success || !Array.isArray(res.data.data)) {
+  console.log("public raw response:", res.data);
+  if (!res.data.success || !res.data.data) {
     throw new Error("Invalid response structure");
   }
 
   return res.data.data;
+  
 };
