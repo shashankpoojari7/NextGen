@@ -262,8 +262,18 @@ npm run build
 ---
  
 ## Screenshots
- 
-> _Add screenshots or a GIF walkthrough of the feed, chat, and profile pages here._
+
+### Feed
+![Feed](assets/feed.png)
+
+### Profile
+![Profile](assets/profile.png)
+
+### Single Post
+![Single Post](assets/single-post.png)
+
+### Chat
+![Chat](assets/chat.png)
  
 ---
  
